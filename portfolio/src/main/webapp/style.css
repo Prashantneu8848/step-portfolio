@@ -75,14 +75,14 @@ body {
   padding: 15px;
 }
 
-.carousel-inner img {
-  height: 500px;
-}
-
 #about-me,
 #timelapse,
 #pictures,
 #connect {
   padding: 40px;
   text-align: center;
+}
+
+.carousel-inner img, .carousel-inner video {
+    height: 500px;
 }
