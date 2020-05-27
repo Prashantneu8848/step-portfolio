@@ -72,3 +72,8 @@ body {
     text-align: center;
     padding: 40px;
 }
+
+.carousel-inner img {
+    width: 400px;
+    height: 500px;
+}
