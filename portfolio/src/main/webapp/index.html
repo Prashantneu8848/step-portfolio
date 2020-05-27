@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html>
-
+ 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>My Portfolio</title>
-	<!-- CDN link to locate Bootstrap -->
-
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link rel="stylesheet" href="style.css">
-
-	<script src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Portfolio</title>
+    <!-- CDN link to locate Bootstrap -->
+ 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+ 
+    <script src="script.js"></script>
 </head>
-
+ 
 <body>
-	<nav class="navbar fixed-top navbar-dark bg-dark">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<span class="navbar-brand mb-0 h1">Prashant Neupane</span>
-			</div>
-
-			<ul class="navbar-nav ml-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="#">HOME</a>
-				</li>
-
-				<li class="nav-item">
-					<a class="nav-link" href="#AboutMe">ABOUT </a>
-				</li>
-
-				<li class="nav-item">
-					<a class="nav-link" href="#Connect">CONNECT</a>
-				</li>
-			</ul>
-		</div>
-	</nav>
-
-		<h1>My Portfolio</h1>
-		<p>This is my portfolio.</p>
-		<p>Click here to get a random message:</p>
-		<button onclick="addRandomGreeting()">Hello</button>
-
-		<div id="greeting-container"></div>
+    <nav class="navbar fixed-top navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <span class="navbar-brand mb-0 h1">Prashant Neupane</span>
+            </div>
+ 
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">HOME</a>
+                </li>
+ 
+                <li class="nav-item">
+                    <a class="nav-link" href="#AboutMe">ABOUT </a>
+                </li>
+ 
+                <li class="nav-item">
+                    <a class="nav-link" href="#Connect">CONNECT</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+ 
+    <div id="parallax">
+        <div class="quotes">
+            <span class="border">
+                I think therefore I am - Prashant Neupane
+            </span>
+        </div>
+    </div>
+ 
+        <h1>My Portfolio</h1>
+        <p>This is my portfolio.</p>
+        <p>Click here to get a random message:</p>
+        <button onclick="addRandomGreeting()">Hello</button>
+ 
+        <div id="greeting-container"></div>
         
         <div id="aboutMeDiv">
             <h2 id="AboutMe">About Me </h2>
@@ -52,20 +60,60 @@
                 I am a Computer Science and rising Junior.
             </p>
         </div>
-		
-	</div>
-	<!-- Below are the sources for loading JS for different Bootstrap components -->
-
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-	</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-	</script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-	</script>
-
+        <div id="parallax1">
+            <div class="hobby">
+                <span class="border">
+                    I love taking Videos and Editing.
+                </span>
+            </div>
+        </div>
+        <div id="timelapseDiv">
+            <h2 id="timelapse">Timelapses</h2>
+            <p>
+                Here are some videos that I have taken and edited
+            </p>
+        </div>
+        <div id="parallax2">
+            <div class="pets">
+                <span class="border">
+                    I have two Dogs
+                </span>
+            </div>
+        </div>
+        <div id="picturesDiv">
+            <h2 id="pictures">Slide Show</h2>
+            <p>
+                Here are some pictures of my Dogs.
+            </p>
+        </div>
+        <div id="parallax3">
+            <div class="connect">
+                <span class="border">
+                    Connect
+                </span>
+            </div>
+        </div>
+        <div id="connectDiv">
+            <h2 id="Connect">Connect with me</h2>
+            <p>
+                Follow me here
+            </p>
+        </div>
+        
+    </div>
+    <!-- Below are the sources for loading JS for different Bootstrap components -->
+ 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+ 
 </body>
-
+ 
 </html>
+
