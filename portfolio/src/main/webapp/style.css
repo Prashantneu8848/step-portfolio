@@ -73,7 +73,6 @@ body {
     padding: 40px;
 }
 
-.carousel-inner img {
-    width: 400px;
+.carousel-inner img, .carousel-inner video {
     height: 500px;
 }
