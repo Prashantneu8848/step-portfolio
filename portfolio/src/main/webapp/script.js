@@ -15,14 +15,28 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function addRandomQuote() {
+    const quoteContainer = document.getElementById('quote');
+    const authorContainer = document.getElementById('author')
+    fetch("https://type.fit/api/quotes")
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            const quoteAndAuthor = data[Math.floor(Math.random() * data.length)];
+            const author = quoteAndAuthor.author;
+            const quote = quoteAndAuthor.text;
+            if (!author) author = '';
+            quoteContainer.innerText = quote;
+            authorContainer.innerText = author;
+        })
+        .catch(error => {
+            console.error(error);
+            quoteContainer.innerText = "Do what you can, with what you have, where you are.";
+            authorContainer.innerText = "Theodre Roosevelt";
+        });
 }
+document.addEventListener('DOMContentLoaded', function() {
+    addRandomQuote();
+}, false);
