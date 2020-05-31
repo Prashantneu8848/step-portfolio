@@ -17,26 +17,28 @@
  */
 
 function addRandomQuote() {
-    const quoteContainer = document.getElementById('quote');
-    const authorContainer = document.getElementById('author')
-    fetch("https://type.fit/api/quotes")
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            const quoteAndAuthor = data[Math.floor(Math.random() * data.length)];
-            const author = quoteAndAuthor.author;
-            const quote = quoteAndAuthor.text;
-            if (!author) author = '';
-            quoteContainer.innerText = quote;
-            authorContainer.innerText = author;
-        })
-        .catch(error => {
-            console.error(error);
-            quoteContainer.innerText = "Do what you can, with what you have, where you are.";
-            authorContainer.innerText = "Theodre Roosevelt";
-        });
+  const quoteContainer = document.getElementById('quote');
+  const authorContainer = document.getElementById('author')
+  fetch("https://type.fit/api/quotes")
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      const quoteAndAuthor = data[Math.floor(Math.random() * data.length)];
+      const author = quoteAndAuthor.author;
+      const quote = quoteAndAuthor.text;
+      // Some quotes do not have author and the API return none.
+      if (!author) author = '';
+      quoteContainer.innerText = quote;
+      authorContainer.innerText = author;
+    })
+    .catch(error => {
+      console.error(error);
+      quoteContainer.innerText = "Do what you can, with what you have, where you are.";
+      authorContainer.innerText = "Theodre Roosevelt";
+    });
 }
+
 document.addEventListener('DOMContentLoaded', function() {
-    addRandomQuote();
+  addRandomQuote();
 }, false);
