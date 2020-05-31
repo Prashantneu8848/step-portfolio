@@ -1,60 +1,65 @@
 body { 
-    height: 100vh;
-    width: 100%;
+  height: 100vh;
+  width: 100%;
 }
 
 #content {
-    margin-left: auto;
-    margin-right: auto;
-    width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 650px;
 }
 
-#parallax, #parallax1, #parallax2, #parallax3 {
-    width: 100%;
-    position: relative;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+#background-image-0,
+#background-image-1,
+#background-image-2,
+#background-image-3 {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  width: 100%;
 }
 
-#parallax {
-    background-image: url("./resources/images/landing0.jpg");
-    height: 150%;
+#background-image-0 {
+  background-image: url(./resources/images/landing0.jpg);
+  height: 150%;
 }
 
-#parallax1 {
-    background-image: url("./resources/images/landing1.jpg");
-    height: 50%;
+#background-image-1 {
+  background-image: url(./resources/images/landing1.jpg);
+  height: 50%;
 }
 
-#parallax2 {
-    background-image: url("./resources/images/landing2.jpg");
-    height: 50%;   
+#background-image-2 {
+  background-image: url(./resources/images/landing2.jpg);
+  height: 50%;   
 }
 
-#parallax3 {
-    background-image: url("./resources/images/landing3.jpg");
-    height: 50%;   
+#background-image-3 {
+  background-image: url(./resources/images/landing3.jpg);
+  height: 50%;   
 }
+
 #greeting-container {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .navbar-nav {
-    flex-direction: row;
+  flex-direction: row;
 }
 
 .nav-link {
-    padding-right: .5rem !important;
-    padding-left: .5rem !important;
+  padding-left: .5rem !important;
+  padding-right: .5rem !important;
 }
 
-#quote, #author {
+#quote,
+#author {
     display: block;
 }
 
-.scrollDown {
+.scroll-down {
     position: absolute;
     left: 0;
     top: 10%;
@@ -74,29 +79,36 @@ body {
     100% {margin-top:0px;}
 }
 
-.quotes, .hobby, .pets, .connect {
-    opacity: 0.8;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
-    text-align: center;
-    color: #000;
+.quotes,
+.hobby,
+.pets,
+.connect {
+  color: #000;
+  left: 0;
+  opacity: .8;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  width: 100%;
 }
 
 .border {
-    border: none !important;
-    color: #fff;
-    padding: 15px;
-    font-size: 25px;
-    letter-spacing: 10px;
+  border: none !important;
+  color: #fff;
+  font-size: 25px;
+  letter-spacing: 10px;
+  padding: 15px;
 }
 
-#aboutMeDiv, #timelapseDiv, #picturesDiv, #connectDiv {
-    text-align: center;
-    padding: 40px;
+#about-me,
+#timelapse,
+#pictures,
+#connect {
+  padding: 40px;
+  text-align: center;
 }
 
-.carousel-inner img, .carousel-inner video {
+.carousel-inner img,
+.carousel-inner video {
     height: 500px;
 }
