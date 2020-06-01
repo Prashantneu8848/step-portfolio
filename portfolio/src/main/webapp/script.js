@@ -12,25 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
+/** 
+ * Fetches a random element from an array.
+ * 
+ * @param {TYPE[]} array the source array
+ * @returns TYPE
+ * @template TYPE
  */
+function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+/** Adds a random quote to the page. */
 
 function addRandomQuote() {
   const quoteContainer = document.getElementById('quote');
-  const authorContainer = document.getElementById('author')
+  const authorContainer = document.getElementById('author');
   fetch("https://type.fit/api/quotes")
-    .then(response => {
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-      const quoteAndAuthor = data[Math.floor(Math.random() * data.length)];
-      const author = quoteAndAuthor.author;
-      const quote = quoteAndAuthor.text;
-      // Some quotes do not have author and the API return none.
-      if (!author) author = '';
-      quoteContainer.innerText = quote;
-      authorContainer.innerText = author;
+      const quote = getRandomElement(data);
+      // Some quotes do not have author and the API returns none.
+      quoteContainer.innerText = quote.text;
+      authorContainer.innerText = quote.author || '';
     })
     .catch(error => {
       console.error(error);
@@ -39,6 +43,4 @@ function addRandomQuote() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  addRandomQuote();
-}, false);
+document.addEventListener('DOMContentLoaded',addRandomQuote, false);
