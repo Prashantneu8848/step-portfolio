@@ -32,8 +32,8 @@ function addRandomQuote() {
     .then(response => response.json())
     .then(data => {
       const quote = getRandomElement(data);
-      // Some quotes do not have author and the API returns none.
       quoteContainer.innerText = quote.text;
+      // Some quotes do not have author and the API returns none.
       authorContainer.innerText = quote.author || '';
     })
     .catch(error => {
