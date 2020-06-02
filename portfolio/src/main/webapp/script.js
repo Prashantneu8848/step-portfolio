@@ -52,10 +52,10 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-      commentContainer.appendChild(createListElement(comment));
+        commentContainer.appendChild(createListElement(comment));
       });
     })
-    .catch(error => void console.error(error))
+    .catch(error => void console.error(error));
 }
 
 /** Creates an <li> element containing text. */
