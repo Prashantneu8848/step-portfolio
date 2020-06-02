@@ -48,9 +48,9 @@ function addElement() {
   fetch('/data')
     .then(response => response.text())
     .then(greeting => {
-    document.getElementById('greeting-container').innerHTML = greeting;
-    console.log(greeting);
-    });
+      document.getElementById('greeting-container').innerHTML = greeting;
+    })
+    .catch(error => void console.error(error))
 }
 
 document.addEventListener('DOMContentLoaded',addRandomQuote, false);
