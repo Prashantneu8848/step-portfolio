@@ -66,4 +66,9 @@ function createListElement(text) {
   return liElement;
 }
 
-document.addEventListener('DOMContentLoaded',addRandomQuote, false);
+function populateDom() {
+    showComments();
+    addRandomQuote();
+}
+
+document.addEventListener('DOMContentLoaded',populateDom,false);
