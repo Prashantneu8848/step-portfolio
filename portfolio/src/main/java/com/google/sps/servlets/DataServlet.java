@@ -27,10 +27,9 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private final List<String> comments = new ArrayList<>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    List<String> comments = new ArrayList<>();
     comments.add("Hey !!! Just commenting - Prakash");
     comments.add("Roses are red - Nirmala");
     comments.add("Violets are blue - Sushant");

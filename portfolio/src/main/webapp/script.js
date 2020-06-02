@@ -51,8 +51,8 @@ function showComments() {
   fetch('/data')
     .then(response => response.json())
     .then(comments => {
-        comments.forEach(comment => {
-        commentContainer.appendChild(createListElement(comment));
+      comments.forEach(comment => {
+      commentContainer.appendChild(createListElement(comment));
       });
     })
     .catch(error => void console.error(error))
