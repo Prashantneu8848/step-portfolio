@@ -43,4 +43,14 @@ function addRandomQuote() {
     });
 }
 
+/** Adds an HTML element from Servlet */
+function addElement() {
+  fetch('/data')
+    .then(response => response.text())
+    .then(greeting => {
+    document.getElementById('greeting-container').innerHTML = greeting;
+    console.log(greeting);
+    });
+}
+
 document.addEventListener('DOMContentLoaded',addRandomQuote, false);
