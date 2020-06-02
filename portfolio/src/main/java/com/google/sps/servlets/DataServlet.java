@@ -27,17 +27,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private final List<String> quotes = new ArrayList<>();
+  private final List<String> comments = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    quotes.add("Hey !!! Just commenting - Prakash");
-    quotes.add("Roses are red - Nirmala");
-    quotes.add("Violets are blue - Sushant");
-    quotes.add("What I am doing, I have no clue- Prashant");  
+    comments.add("Hey !!! Just commenting - Prakash");
+    comments.add("Roses are red - Nirmala");
+    comments.add("Violets are blue - Sushant");
+    comments.add("What I am doing, I have no clue- Prashant");  
     
     Gson gson = new Gson();
-    String json = gson.toJson(quotes);
+    String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }

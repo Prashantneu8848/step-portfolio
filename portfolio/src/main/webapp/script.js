@@ -43,7 +43,7 @@ function addRandomQuote() {
     });
 }
 
-/** Adds an HTML element from Servlet */
+/** Adds an HTML element from Servlet. */
 function showComments() {
   const commentContainer = document.getElementById('comments');
   commentContainer.innerHTML = '';
