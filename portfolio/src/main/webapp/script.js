@@ -67,8 +67,8 @@ function createListElement(text) {
 }
 
 function populateDom() {
-    showComments();
-    addRandomQuote();
+  showComments();
+  addRandomQuote();
 }
 
 document.addEventListener('DOMContentLoaded',populateDom,false);
