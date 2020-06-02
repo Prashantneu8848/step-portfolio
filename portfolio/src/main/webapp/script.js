@@ -12,17 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
+/** 
+ * Fetches a random element from an array.
+ * 
+ * @param {TYPE[]} array the source array
+ * @returns TYPE
+ * @template TYPE
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
 }
+
+/** Adds a random quote to the page. */
+
+function addRandomQuote() {
+  const quoteContainer = document.getElementById('quote');
+  const authorContainer = document.getElementById('author');
+  fetch("https://type.fit/api/quotes")
+    .then(response => response.json())
+    .then(data => {
+      const quote = getRandomElement(data);
+      quoteContainer.innerText = quote.text;
+      // Some quotes do not have author and the API returns none.
+      authorContainer.innerText = quote.author || '';
+    })
+    .catch(error => {
+      console.error(error);
+      quoteContainer.innerText = "Do what you can, with what you have, where you are.";
+      authorContainer.innerText = "Theodre Roosevelt";
+    });
+}
+
+document.addEventListener('DOMContentLoaded',addRandomQuote, false);
