@@ -44,13 +44,26 @@ function addRandomQuote() {
 }
 
 /** Adds an HTML element from Servlet */
-function addElement() {
+function showComments() {
+  const commentContainer = document.getElementById('comments');
+  commentContainer.innerHTML = '';
+
   fetch('/data')
-    .then(response => response.text())
-    .then(greeting => {
-      document.getElementById('greeting-container').innerHTML = greeting;
+    .then(response => response.json())
+    .then(comments => {
+        comments.forEach(comment => {
+        commentContainer.appendChild(createListElement(comment));
+      });
     })
     .catch(error => void console.error(error))
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.setAttribute('class', 'list-group-item');
+  liElement.innerText = text;
+  return liElement;
 }
 
 document.addEventListener('DOMContentLoaded',addRandomQuote, false);
