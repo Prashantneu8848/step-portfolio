@@ -41,10 +41,6 @@ body {
   height: 50%;   
 }
 
-#greeting-container {
-  margin-top: 20px;
-}
-
 .navbar-nav {
   flex-direction: row;
 }
