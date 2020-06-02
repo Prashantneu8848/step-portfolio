@@ -27,11 +27,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private List<String> quotes;
+  private final List<String> quotes = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    quotes = new ArrayList<>();
     quotes.add("Hey !!! Just commenting - Prakash");
     quotes.add("Roses are red - Nirmala");
     quotes.add("Violets are blue - Sushant");
