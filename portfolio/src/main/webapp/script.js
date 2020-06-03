@@ -52,8 +52,8 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        console.log(comment);
-        commentContainer.appendChild(createListElement(comment.firstName, comment.lastName, comment.comment, comment.commentDate));
+        commentContainer.appendChild(createListElement(comment.firstName, comment.lastName,
+            comment.comment, comment.commentDate));
       });
     })
     .catch(error => void console.error(error));
@@ -63,7 +63,7 @@ function showComments() {
 function createListElement(firstName, lastName, comment, date) {
   const liElement = document.createElement('li');
   liElement.setAttribute('class', 'list-group-item');
-  liElement.innerText = firstName + lastName + " commented " + comment + " at " + date;
+  liElement.innerText = firstName + " " + lastName + " commented " + comment + " at " + date;
   return liElement;
 }
 

@@ -17,9 +17,9 @@ package com.google.sps.servlets;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.HashMap; 
-import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -74,10 +74,12 @@ public class DataServlet extends HttpServlet {
   private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment) {
     HashMap<String, String> fieldValues = new HashMap<>();
     Date commentDate = new Date();
+
     fieldValues.put("firstName", firstName);
     fieldValues.put("lastName", lastName);
     fieldValues.put("comment", comment);
     fieldValues.put("commentDate", commentDate.toString());
+    
     return fieldValues;
   }
 }
