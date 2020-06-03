@@ -52,17 +52,18 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        commentContainer.appendChild(createListElement(comment));
+        console.log(comment);
+        commentContainer.appendChild(createListElement(comment.firstName, comment.lastName, comment.comment, comment.commentDate));
       });
     })
     .catch(error => void console.error(error));
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(text) {
+function createListElement(firstName, lastName, comment, date) {
   const liElement = document.createElement('li');
   liElement.setAttribute('class', 'list-group-item');
-  liElement.innerText = text;
+  liElement.innerText = firstName + lastName + " commented " + comment + " at " + date;
   return liElement;
 }
 

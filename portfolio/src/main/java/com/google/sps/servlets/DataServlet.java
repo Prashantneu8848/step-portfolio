@@ -18,6 +18,8 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap; 
+import java.util.Date;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +28,56 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  
+  List<HashMap<String, String>> comments = new ArrayList<>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    List<String> comments = new ArrayList<>();
-    comments.add("Hey !!! Just commenting - Prakash");
-    comments.add("Roses are red - Nirmala");
-    comments.add("Violets are blue - Sushant");
-    comments.add("What I am doing, I have no clue- Prashant");  
-    
+    response.setContentType("application/json");
+
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    String firstName = getParameter(request, "first-name", "");
+    String lastName = getParameter(request, "last-name", "");
+    String comment = getParameter(request, "comment", "");
+
+    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, comment);
+
+    comments.add(commentsData);
+    
+    response.sendRedirect("/index.html#connect");
+  }
+
+/**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
+  }
+
+/**
+   * @return  HashMap conatining the first name, last name, comment and date when comment
+   *           was made
+   */
+  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment) {
+    HashMap<String, String> fieldValues = new HashMap<>();
+    Date commentDate = new Date();
+    fieldValues.put("firstName", firstName);
+    fieldValues.put("lastName", lastName);
+    fieldValues.put("comment", comment);
+    fieldValues.put("commentDate", commentDate.toString());
+    return fieldValues;
   }
 }

@@ -166,6 +166,29 @@
   <a class="nav-link" href="#">Return to Top</a>
 </div>
 <div id="comment-section">
+  <p>Have a feedback ? Please leave a comment
+  <button class="btn btn-primary" type="button" data-toggle="collapse" 
+      data-target="#comment-form" aria-expanded="false" aria-controls="comment-form">
+    Add Comment
+  </button>
+  <form action="/data" method="POST" class="collapse" id="comment-form">
+    <p>Please complete the Comment form
+    <table>
+      <tr class="form-row">
+        <td class="form-group col-md-6">
+          <label for="first-name">First Name</label>
+          <input type="text" class="form-control" placeholder="First Name" id="first-name" name="first-name">
+        <td class="form-group col-md-6">
+          <label for="last-name">Last Name</label>
+          <input type="text" class="form-control" placeholder="Last Name" id="last-name" name="last-name">
+      <tr class="form-row">
+        <td>
+          <label for="comment">Comment</label>
+          <input type="text" class="form-control" placeholder="Write your comment" id="comment" name="comment">
+        <td>
+          <button type="submit" class="btn btn-primary">Submit</button>
+    </table>
+  </form>
   <section class="card">
     <header class="card-header">COMMENTS</header>
     <ul id="comments" class="list-group list-group-flush"></ul>
