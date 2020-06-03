@@ -52,14 +52,14 @@ public class DataServlet extends HttpServlet {
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
 
-    Entity taskEntity = new Entity("comment");
-    taskEntity.setProperty("firstName", firstName);
-    taskEntity.setProperty("lastName", lastName);
-    taskEntity.setProperty("commentText", commentText);
-    taskEntity.setProperty("date", commentDate);
+    Entity commentEntity = new Entity("comment");
+    commentEntity.setProperty("firstName", firstName);
+    commentEntity.setProperty("lastName", lastName);
+    commentEntity.setProperty("commentText", commentText);
+    commentEntity.setProperty("date", commentDate);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
+    datastore.put(commentEntity);
 
     HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText);
 
