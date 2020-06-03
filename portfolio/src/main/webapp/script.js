@@ -52,6 +52,7 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
+        console.log(comment);
         commentContainer.appendChild(createListElement(comment));
       });
     })
@@ -71,4 +72,4 @@ function populateDom() {
   addRandomQuote();
 }
 
-document.addEventListener('DOMContentLoaded',populateDom,false);
+document.addEventListener('DOMContentLoaded', populateDom, false);
