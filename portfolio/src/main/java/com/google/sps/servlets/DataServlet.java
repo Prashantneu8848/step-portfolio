@@ -17,8 +17,11 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,10 +35,25 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  List<HashMap<String, String>> comments = new ArrayList<>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    Query query = new Query("Comment");
+    List<HashMap<String, String>> comments = new ArrayList<>();
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity commentEntity : results.asIterable()) {
+      String firstName = (String) commentEntity.getProperty("firstName");
+      String lastName = (String) commentEntity.getProperty("lastName");
+      String commentText = (String) commentEntity.getProperty("commentText");
+      String commentDate = (String) commentEntity.getProperty("date");
+
+      HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText, commentDate);
+      comments.add(commentsData);
+    }
+
     response.setContentType("application/json");
 
     Gson gson = new Gson();
@@ -52,18 +70,15 @@ public class DataServlet extends HttpServlet {
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
 
-    Entity commentEntity = new Entity("comment");
+    Entity commentEntity = new Entity("Comment");
+
     commentEntity.setProperty("firstName", firstName);
     commentEntity.setProperty("lastName", lastName);
     commentEntity.setProperty("commentText", commentText);
-    commentEntity.setProperty("date", commentDate);
+    commentEntity.setProperty("date", commentDate.toString());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
-
-    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText);
-
-    comments.add(commentsData);
     
     response.sendRedirect("/index.html#connect");
   }
@@ -84,14 +99,13 @@ public class DataServlet extends HttpServlet {
    * @return  HashMap conatining the first name, last name, comment and date when comment
    *           was made
    */
-  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment) {
+  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment, String commentDate) {
     HashMap<String, String> fieldValues = new HashMap<>();
-    Date commentDate = new Date();
 
     fieldValues.put("firstName", firstName);
     fieldValues.put("lastName", lastName);
     fieldValues.put("comment", comment);
-    fieldValues.put("commentDate", commentDate.toString());
+    fieldValues.put("commentDate", commentDate);
     
     return fieldValues;
   }

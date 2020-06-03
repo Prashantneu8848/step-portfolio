@@ -52,6 +52,7 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
+        console.log(comment);
         commentContainer.appendChild(createListElement(comment.firstName, comment.lastName,
             comment.comment, comment.commentDate));
       });
