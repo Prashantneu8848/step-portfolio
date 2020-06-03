@@ -14,6 +14,9 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,9 +49,19 @@ public class DataServlet extends HttpServlet {
 
     String firstName = getParameter(request, "first-name", "");
     String lastName = getParameter(request, "last-name", "");
-    String comment = getParameter(request, "comment", "");
+    String commentText = getParameter(request, "comment", "");
+    Date commentDate = new Date();
 
-    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, comment);
+    Entity taskEntity = new Entity("comment");
+    taskEntity.setProperty("firstName", firstName);
+    taskEntity.setProperty("lastName", lastName);
+    taskEntity.setProperty("commentText", commentText);
+    taskEntity.setProperty("date", commentDate);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(taskEntity);
+
+    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText);
 
     comments.add(commentsData);
     
