@@ -72,4 +72,15 @@ function populateDom() {
   addRandomQuote();
 }
 
+/** Removes comments from Datastore. */
+function deleteComments() {
+  fetch('/delete-data', {
+    method: 'POST'
+  })
+    .then(response => response.text())
+    .then(() => {
+      showComments();
+    })
+    .catch(error => void console.error(error));
+}
 document.addEventListener('DOMContentLoaded', populateDom, false);
