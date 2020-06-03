@@ -47,12 +47,11 @@ function addRandomQuote() {
 function showComments() {
   const commentContainer = document.getElementById('comments');
   commentContainer.innerHTML = '';
-
-  fetch('/data')
+  const maxComment = document.getElementById("max-comment").value;
+  fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        console.log(comment);
         commentContainer.appendChild(createListElement(comment.firstName, comment.lastName,
             comment.comment, comment.commentDate));
       });

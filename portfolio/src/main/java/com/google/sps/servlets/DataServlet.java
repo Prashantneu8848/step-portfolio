@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.HashMap; 
 import javax.servlet.annotation.WebServlet;
@@ -44,7 +45,18 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    for (Entity commentEntity : results.asIterable()) {
+    Iterator<Entity> commentIterator = results.asIterator();
+    int limit = 0;
+
+    int maxComment;
+    try {
+      maxComment = Integer.parseInt(request.getParameter("max-comment"));
+    } catch (NumberFormatException e) {
+      maxComment = Integer.MAX_VALUE;
+    }
+
+    while(commentIterator.hasNext() && limit < maxComment) {
+      Entity commentEntity = commentIterator.next();
       String firstName = (String) commentEntity.getProperty("firstName");
       String lastName = (String) commentEntity.getProperty("lastName");
       String commentText = (String) commentEntity.getProperty("commentText");
@@ -52,6 +64,7 @@ public class DataServlet extends HttpServlet {
 
       HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText, commentDate);
       comments.add(commentsData);
+      limit += 1;
     }
 
     response.setContentType("application/json");
