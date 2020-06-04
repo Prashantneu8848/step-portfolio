@@ -43,21 +43,31 @@ function addRandomQuote() {
     });
 }
 
-/** Adds an HTML element from Servlet. */
+/** Fetches comments from servlet and adds in DOM. */
 function showComments() {
+  const maxComment = sessionStorage.getItem('max-comment') || 1;
+  document.getElementById("max-comment").value = maxComment;
+
   const commentContainer = document.getElementById('comments');
   commentContainer.innerHTML = '';
-  const maxComment = document.getElementById("max-comment").value;
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        console.log(comment);
         commentContainer.appendChild(createListElement(comment.propertyMap));
       });
     })
     .catch(error => void console.error(error));
 }
+
+/** Resets session storage value and shows that number of comments. */
+function refreshComments() {
+  const maxComment = document.getElementById("max-comment").value;
+  console.log(maxComment);
+  sessionStorage.setItem('max-comment', maxComment);
+  showComments();
+}
+
 
 /** Creates an <li> element containing text. */
 function createListElement({firstName, lastName, commentText, date}) {
