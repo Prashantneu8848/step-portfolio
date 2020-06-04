@@ -89,7 +89,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html#connect");
   }
 
-/**
+  /**
    * @return the request parameter, or the default value if the parameter
    *         was not specified by the client
    */
@@ -101,18 +101,4 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 
-/**
-   * @return  HashMap conatining the first name, last name, comment and date when comment
-   *           was made
-   */
-  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment, String commentDate) {
-    HashMap<String, String> fieldValues = new HashMap<>();
-
-    fieldValues.put("firstName", firstName);
-    fieldValues.put("lastName", lastName);
-    fieldValues.put("comment", comment);
-    fieldValues.put("commentDate", commentDate);
-    
-    return fieldValues;
-  }
 }

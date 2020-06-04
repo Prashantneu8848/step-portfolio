@@ -53,18 +53,18 @@ function showComments() {
     .then(comments => {
       comments.forEach(comment => {
         console.log(comment);
-        commentContainer.appendChild(createListElement(comment.propertyMap.firstName, comment.propertyMap.lastName,
-            comment.propertyMap.commentText, comment.propertyMap.date));
+        commentContainer.appendChild(createListElement(comment.propertyMap));
       });
     })
     .catch(error => void console.error(error));
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(firstName, lastName, comment, date) {
+function createListElement({firstName, lastName, commentText, date}) {
   const liElement = document.createElement('li');
   liElement.setAttribute('class', 'list-group-item');
-  liElement.innerText = firstName + " " + lastName + " commented " + comment + " at " + date;
+  liElement.innerText = firstName + " " + lastName + " commented " +
+      commentText + " at " + date;
   return liElement;
 }
 
@@ -78,10 +78,8 @@ function deleteComments() {
   fetch('/delete-data', {
     method: 'POST'
   })
-    .then(response => response.text())
-    .then(() => {
-      showComments();
-    })
-    .catch(error => void console.error(error));
+  // Call showComments function for ther server to be in sync with the lost data.
+  .then(showComments)
+  .catch(error => void console.error(error));
 }
 document.addEventListener('DOMContentLoaded', populateDom, false);
