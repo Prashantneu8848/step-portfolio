@@ -47,7 +47,8 @@ function addRandomQuote() {
 function showComments() {
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById("max-comment").value = maxComment;
-
+  document.getElementById('comments').innerHTML = '';
+  
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
@@ -87,11 +88,14 @@ function populateDom() {
 
 /** Removes comments from Datastore. */
 function deleteComments() {
-  fetch('/delete-data', {
-    method: 'POST'
-  })
-  // Call showComments function for ther server to be in sync with the lost data.
-  .then(showComments)
-  .catch(error => void console.error(error));
+  if (window.confirm("Do you really want to delete all comments ?")) {
+    console.log('deleting all comments');
+    fetch('/delete-data', {
+      method: 'POST'
+    })
+    // Call showComments function for ther server to be in sync with the lost data.
+    .then(showComments)
+    .catch(error => void console.error(error));
+    }
 }
 document.addEventListener('DOMContentLoaded', populateDom, false);
