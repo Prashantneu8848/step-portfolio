@@ -48,13 +48,11 @@ function showComments() {
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById("max-comment").value = maxComment;
 
-  const commentContainer = document.getElementById('comments');
-  commentContainer.innerHTML = '';
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        commentContainer.appendChild(createListElement(comment.propertyMap));
+        renderListComments(comment.propertyMap);
       });
     })
     .catch(error => void console.error(error));
@@ -70,12 +68,16 @@ function refreshComments() {
 
 
 /** Creates an <li> element containing text. */
-function createListElement({firstName, lastName, commentText, date}) {
-  const liElement = document.createElement('li');
-  liElement.setAttribute('class', 'list-group-item');
-  liElement.innerText = firstName + " " + lastName + " commented " +
-      commentText + " at " + date;
-  return liElement;
+function renderListComments({firstName, lastName, commentText, date}) {
+  const template = document.getElementById('item-template');
+  const content = template.content.cloneNode(true);
+
+  content.querySelector('.first-name').innerText = firstName;
+  content.querySelector('.last-name').innerText = lastName;
+  content.querySelector('.comment-text').innerText = commentText;
+  content.querySelector('.date').innerText = date;
+
+  document.getElementById('comments').appendChild(content);
 }
 
 function populateDom() {
