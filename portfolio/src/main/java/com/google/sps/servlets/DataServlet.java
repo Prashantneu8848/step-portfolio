@@ -47,8 +47,8 @@ public class DataServlet extends HttpServlet {
     String firstName = getParameter(request, "first-name", "");
     String lastName = getParameter(request, "last-name", "");
     String comment = getParameter(request, "comment", "");
-
-    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, comment);
+    Date commentDate = new Date();
+    HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, comment, commentDate.toString());
 
     comments.add(commentsData);
     
@@ -71,14 +71,13 @@ public class DataServlet extends HttpServlet {
    * @return  HashMap conatining the first name, last name, comment and date when comment
    *           was made
    */
-  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment) {
+  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment, String commentDate) {
     HashMap<String, String> fieldValues = new HashMap<>();
-    Date commentDate = new Date();
 
     fieldValues.put("firstName", firstName);
     fieldValues.put("lastName", lastName);
     fieldValues.put("comment", comment);
-    fieldValues.put("commentDate", commentDate.toString());
+    fieldValues.put("commentDate", commentDate);
     
     return fieldValues;
   }
