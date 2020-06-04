@@ -55,7 +55,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html#connect");
   }
 
-/**
+  /**
    * @return the request parameter, or the default value if the parameter
    *         was not specified by the client
    */
@@ -67,7 +67,8 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 
-/**
+
+  /**
    * @return  HashMap conatining the first name, last name, comment and date when comment
    *           was made
    */
