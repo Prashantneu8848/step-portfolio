@@ -52,11 +52,12 @@ public class DataServlet extends HttpServlet {
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
 
-    Entity commentEntity = new Entity("comment");
+    Entity commentEntity = new Entity("Comment");
+    
     commentEntity.setProperty("firstName", firstName);
     commentEntity.setProperty("lastName", lastName);
     commentEntity.setProperty("commentText", commentText);
-    commentEntity.setProperty("date", commentDate);
+    commentEntity.setProperty("date", commentDate.toString());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
@@ -84,14 +85,13 @@ public class DataServlet extends HttpServlet {
    * @return  HashMap conatining the first name, last name, comment and date when comment
    *           was made
    */
-  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment) {
+  private HashMap<String, String> makeHashmapOfFields(String firstName, String lastName, String comment, String commentDate) {
     HashMap<String, String> fieldValues = new HashMap<>();
-    Date commentDate = new Date();
 
     fieldValues.put("firstName", firstName);
     fieldValues.put("lastName", lastName);
     fieldValues.put("comment", comment);
-    fieldValues.put("commentDate", commentDate.toString());
+    fieldValues.put("commentDate", commentDate);
     
     return fieldValues;
   }
