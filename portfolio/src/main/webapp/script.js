@@ -52,8 +52,9 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        commentContainer.appendChild(createListElement(comment.firstName, comment.lastName,
-            comment.comment, comment.commentDate));
+        console.log(comment);
+        commentContainer.appendChild(createListElement(comment.propertyMap.firstName, comment.propertyMap.lastName,
+            comment.propertyMap.commentText, comment.propertyMap.date));
       });
     })
     .catch(error => void console.error(error));

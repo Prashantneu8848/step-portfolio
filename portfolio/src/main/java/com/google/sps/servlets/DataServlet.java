@@ -40,7 +40,7 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     Query query = new Query("Comment");
-    List<HashMap<String, String>> comments = new ArrayList<>();
+    List<Entity> comments = new ArrayList<>();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -57,17 +57,10 @@ public class DataServlet extends HttpServlet {
 
     while(commentIterator.hasNext() && limit < maxComment) {
       Entity commentEntity = commentIterator.next();
-      String firstName = (String) commentEntity.getProperty("firstName");
-      String lastName = (String) commentEntity.getProperty("lastName");
-      String commentText = (String) commentEntity.getProperty("commentText");
-      String commentDate = (String) commentEntity.getProperty("date");
 
-      HashMap<String, String> commentsData = makeHashmapOfFields(firstName, lastName, commentText, commentDate);
-      comments.add(commentsData);
+      comments.add(commentEntity);
       limit += 1;
     }
-
-    response.setContentType("application/json");
 
     Gson gson = new Gson();
     String json = gson.toJson(comments);
