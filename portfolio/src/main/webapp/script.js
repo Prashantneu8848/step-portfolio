@@ -90,8 +90,8 @@ function populateDom() {
 function deleteComments() {
   if (window.confirm("Do you really want to delete all comments ?")) {
     console.log('deleting all comments');
-    fetch('/delete-data', {
-      method: 'POST'
+    fetch('/data', {
+      method: 'DELETE'
     })
     // Call showComments function for ther server to be in sync with the lost data.
     .then(showComments)

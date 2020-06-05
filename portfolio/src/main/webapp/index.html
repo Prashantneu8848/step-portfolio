@@ -172,44 +172,47 @@
     Add Comment
   </button>
 
-  <form action="/data" method="POST" class="collapse" id="comment-form">
+  <form action="/data" method="POST" class="collapse border-dark" id="comment-form">
     <p>Please complete the Comment form
-    <table>
-      <tr class="form-row">
-        <td class="form-group col-md-6">
+    <div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
           <label for="first-name">First Name</label>
           <input type="text" class="form-control" placeholder="First Name" id="first-name" name="first-name">
-        <td class="form-group col-md-6">
+        </div>
+        <div class="form-group col-md-6">
           <label for="last-name">Last Name</label>
           <input type="text" class="form-control" placeholder="Last Name" id="last-name" name="last-name">
-      <tr class="form-row">
-        <td>
+        </div>
+      </div>
+      <div class="form-group">
+        <div>
           <label for="comment">Comment</label>
           <input type="text" class="form-control" placeholder="Write your comment" id="comment" name="comment">
-        <td>
-          <button type="submit" class="btn btn-outline-dark btn-sm">Submit</button>
-    </table>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-outline-dark btn-sm">Submit</button>
+    </div>
   </form>
-  <section class="card">
+  <section class="card text-white bg-dark">
     <header class="card-header">
       COMMENTS
       <select id="max-comment" value="1" onchange="refreshComments();">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="All">All</option>
+        <option value="1">1
+        <option value="2">2
+        <option value="3">3
+        <option value="4">4
+        <option value="5">5
+        <option value="All">All
       </select>
     </header>
-    <button class="btn btn-outline-dark btn-sm" type="button" onclick="deleteComments();">
+    <button class="btn btn-danger btn-sm" type="button" onclick="deleteComments();">
       Delete Comments
     </button>
     <ul id="comments" class="list-group list-group-flush"></ul>
     <template id="item-template">
-      <li class="list-group-item"><span class="first-name">  </span> <span class="last-name"></span> commented <span class="comment-text"></span> on <span class="date"></span>
+      <li class="list-group-item bg-dark"><span class="first-name">  </span> <span class="last-name"></span> commented <span class="comment-text"></span> on <span class="date"></span>
     </template>
-
   </section>
 </div>
 

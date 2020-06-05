@@ -21,12 +21,10 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap; 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,24 +34,20 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
+  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     Query query = new Query("Comment");
     List<Entity> comments = new ArrayList<>();
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     Iterator<Entity> commentIterator = results.asIterator();
     int limit = 0;
 
-    int maxComment;
-    try {
-      maxComment = Integer.parseInt(request.getParameter("max-comment"));
-    } catch (NumberFormatException e) {
-      maxComment = Integer.MAX_VALUE;
-    }
+    int maxComment = getCommentLimit(request, "max-comment");
 
     while(commentIterator.hasNext() && limit < maxComment) {
       Entity commentEntity = commentIterator.next();
@@ -83,10 +77,22 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("commentText", commentText);
     commentEntity.setProperty("date", commentDate.toString());
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     
     response.sendRedirect("/index.html#connect");
+  }
+  
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comment").setKeysOnly();
+
+    PreparedQuery results = datastore.prepare(query);
+    
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
+
+    response.getWriter().println("Successfully deleted all entries");
   }
 
   /**
@@ -101,4 +107,14 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 
+  private int getCommentLimit(HttpServletRequest request, String parameter) {
+    int maxComment;
+
+    try {
+      maxComment = Integer.parseInt(request.getParameter(parameter));
+    } catch (NumberFormatException e) {
+      maxComment = Integer.MAX_VALUE;
+    }
+    return maxComment;
+  }
 }

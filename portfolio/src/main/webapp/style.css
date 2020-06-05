@@ -108,6 +108,10 @@ body {
   text-align: center;
 }
 
+#comment-form {
+  margin-bottom: 5px;
+}
+
 .carousel-inner img,
 .carousel-inner video {
   height: 500px;
