@@ -41,7 +41,7 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
 
-    int maxCommentLimit = getCommentLimit(request, "max-comment");
+    int maxCommentLimit = getCommentLimitFromParam(request, "max-comment");
     List<Entity> comments = results.asList(FetchOptions.Builder.withLimit(maxCommentLimit));
 
     Gson gson = new Gson();
@@ -95,7 +95,7 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 
-  private int getCommentLimit(HttpServletRequest request, String parameter) {
+  private int getCommentLimitFromParam(HttpServletRequest request, String parameter) {
     int maxComment;
 
     try {
