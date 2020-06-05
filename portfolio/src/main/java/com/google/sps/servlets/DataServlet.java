@@ -22,9 +22,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -43,8 +41,8 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
 
-    int maxComment = getCommentLimit(request, "max-comment");
-    List<Entity> comments = results.asList(FetchOptions.Builder.withLimit(maxComment));
+    int maxCommentLimit = getCommentLimit(request, "max-comment");
+    List<Entity> comments = results.asList(FetchOptions.Builder.withLimit(maxCommentLimit));
 
     Gson gson = new Gson();
     String json = gson.toJson(comments);

@@ -93,9 +93,10 @@ function deleteComments() {
     fetch('/data', {
       method: 'DELETE'
     })
-    // Call showComments function for ther server to be in sync with the lost data.
+    // Call showComments function for the server to be in sync with the lost data.
     .then(showComments)
     .catch(error => void console.error(error));
     }
 }
+
 document.addEventListener('DOMContentLoaded', populateDom, false);
