@@ -43,32 +43,56 @@ function addRandomQuote() {
     });
 }
 
-/** Adds an HTML element from Servlet. */
+/** Fetches comments from servlet and adds in DOM. */
 function showComments() {
-  const commentContainer = document.getElementById('comments');
-  commentContainer.innerHTML = '';
-
-  fetch('/data')
+  const maxComment = sessionStorage.getItem('max-comment') || 1;
+  document.getElementById("max-comment").value = maxComment;
+  document.getElementById('comments').innerHTML = '';
+  
+  fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        commentContainer.appendChild(createListElement(comment));
+        renderListComments(comment);
       });
     })
     .catch(error => void console.error(error));
 }
 
+/** Resets session storage value and shows that number of comments. */
+function refreshComments() {
+  const maxComment = document.getElementById("max-comment").value;
+  sessionStorage.setItem('max-comment', maxComment);
+  showComments();
+}
+
+
 /** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.setAttribute('class', 'list-group-item');
-  liElement.innerText = text;
-  return liElement;
+function renderListComments({firstName, lastName, commentText, date}) {
+  const template = document.getElementById('item-template');
+  const content = template.content.cloneNode(true);
+
+  content.querySelector('.first-name').innerText = firstName;
+  content.querySelector('.last-name').innerText = lastName;
+  content.querySelector('.comment-text').innerText = commentText;
+  content.querySelector('.date').innerText = date;
+
+  document.getElementById('comments').appendChild(content);
 }
 
 function populateDom() {
   showComments();
   addRandomQuote();
+}
+
+/** Removes comments from Datastore. */
+function deleteComments() {
+  if (window.confirm("Do you really want to delete all comments ?")) {
+    fetch('/data', {method: 'DELETE'})
+    // Call showComments function for the server to be in sync with the lost data.
+    .then(showComments)
+    .catch(error => void console.error(error));
+  }
 }
 
 document.addEventListener('DOMContentLoaded', populateDom, false);

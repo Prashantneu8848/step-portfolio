@@ -14,30 +14,110 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    List<String> comments = new ArrayList<>();
-    comments.add("Hey !!! Just commenting - Prakash");
-    comments.add("Roses are red - Nirmala");
-    comments.add("Violets are blue - Sushant");
-    comments.add("What I am doing, I have no clue- Prashant");  
-    
+
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
+
+    int maxCommentLimit = getCommentLimitFromParam(request);
+
+    List<Comment> comments = new ArrayList<>();
+    Iterable<Entity> fetchedComments =
+        results.asIterable(FetchOptions.Builder.withLimit(maxCommentLimit));
+
+    for (Entity entity : fetchedComments) {
+      String firstName = (String) entity.getProperty("firstName");
+      String lastName = (String) entity.getProperty("lastName");
+      String commentText = (String) entity.getProperty("commentText");
+      String date = (String) entity.getProperty("date");
+
+      Comment comment = new Comment(firstName, lastName, commentText, date);
+      comments.add(comment);
+    }
+
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
+  
+  private int getCommentLimitFromParam(HttpServletRequest request) {
+    int maxComment;
+
+    try {
+      maxComment = Integer.parseInt(request.getParameter("max-comment"));
+    } catch (NumberFormatException e) {
+      maxComment = Integer.MAX_VALUE;
+    }
+    return maxComment;
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    String firstName = getParameter(request, "first-name", "");
+    String lastName = getParameter(request, "last-name", "");
+    String commentText = getParameter(request, "comment", "");
+    Date commentDate = new Date();
+
+    Entity commentEntity = new Entity("Comment");
+
+    commentEntity.setProperty("firstName", firstName);
+    commentEntity.setProperty("lastName", lastName);
+    commentEntity.setProperty("commentText", commentText);
+    commentEntity.setProperty("date", commentDate.toString());
+
+    datastore.put(commentEntity);
+    
+    response.sendRedirect("/index.html#connect");
+  }
+  
+  @Override
+  public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Query query = new Query("Comment").setKeysOnly();
+
+    PreparedQuery results = datastore.prepare(query);
+    
+    for (Entity entity : results.asIterable()) {
+      datastore.delete(entity.getKey());
+    }
+
+    response.sendRedirect("/index.html#connect");
+  }
+
+  /**
+   * @return the request parameter, or the default value if the parameter
+   *         was not specified by the client
+   */
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
+  }
+
 }
