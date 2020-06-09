@@ -45,6 +45,13 @@ function addRandomQuote() {
 
 /** Fetches comments from servlet and adds in DOM. */
 function showComments() {
+  const userLoggedIn = sessionStorage.getItem('logged-in');
+  if (userLoggedIn === '') {
+    document.getElementById('comment-section').style.visibility = "hidden";
+    document.getElementById('comment-info').innerText= "Log In to add and view comments";
+    return;
+  };
+
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById("max-comment").value = maxComment;
   document.getElementById('comments').innerHTML = '';
@@ -90,9 +97,8 @@ function login() {
     sessionStorage.setItem('logged-in', userInfo.nickName);
     fillDropDownMenu(userInfo.nickName, '#', userInfo.logOutUrl, '#')
   })
-  .catch(error => {
-    console.error(error);
-    sessionStorage.setItem('logged-in', "");
+  .catch(() => {
+    sessionStorage.setItem('logged-in', '');
 
     const userInfoContainer = document.querySelector('.login');
     userInfoContainer.innerHTML = '';
