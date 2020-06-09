@@ -12,7 +12,8 @@ body {
 #background-image-0,
 #background-image-1,
 #background-image-2,
-#background-image-3 {
+#background-image-3,
+#background-image-4 {
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -38,6 +39,11 @@ body {
 
 #background-image-3 {
   background-image: url(./resources/images/landing3.jpg);
+  height: 50%;   
+}
+
+#background-image-4 {
+  background-image: url(./resources/images/landing4.jpg);
   height: 50%;   
 }
 
@@ -81,6 +87,7 @@ body {
 .quotes,
 .hobby,
 .pets,
+.travel,
 .connect {
   color: #000;
   left: 0;
@@ -102,6 +109,7 @@ body {
 #about-me,
 #timelapse,
 #pictures,
+#travel,
 #comment-section,
 #connect {
   padding: 40px;
