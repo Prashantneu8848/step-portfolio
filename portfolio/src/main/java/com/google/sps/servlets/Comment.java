@@ -14,18 +14,17 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.users.User;
-/** Encapsulate User info and logout url. */
-public class UserAndLogoutInfo {
-  private String email;
-  private String nickName;
-  private String userId;
-  private String logOutUrl;
+/** Encapsulate Datastore entity as comment. */
+public class Comment {
+  private String firstName;
+  private String lastName;
+  private String commentText;
+  private String date;
 
-  UserAndLogoutInfo(User user, String logOutUrl) {
-    this.email = user.getEmail();
-    this.nickName = user.getNickname();
-    this.userId = user.getUserId();
-    this.logOutUrl = logOutUrl;
+  public Comment(String firstName, String lastName, String commentText, String date) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.commentText = commentText;
+    this.date = date;
   }
 }

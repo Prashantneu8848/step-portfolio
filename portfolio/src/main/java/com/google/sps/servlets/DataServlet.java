@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
@@ -29,11 +30,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -41,13 +42,37 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);
 
-    int maxCommentLimit = getCommentLimitFromParam(request, "max-comment");
-    List<Entity> comments = results.asList(FetchOptions.Builder.withLimit(maxCommentLimit));
+    int maxCommentLimit = getCommentLimitFromParam(request);
+
+    List<Comment> comments = new ArrayList<>();
+    Iterable<Entity> fetchedComments =
+        results.asIterable(FetchOptions.Builder.withLimit(maxCommentLimit));
+
+    for (Entity entity : fetchedComments) {
+      String firstName = (String) entity.getProperty("firstName");
+      String lastName = (String) entity.getProperty("lastName");
+      String commentText = (String) entity.getProperty("commentText");
+      String date = (String) entity.getProperty("date");
+
+      Comment comment = new Comment(firstName, lastName, commentText, date);
+      comments.add(comment);
+    }
 
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     response.setContentType("application/json;");
     response.getWriter().println(json);
+  }
+  
+  private int getCommentLimitFromParam(HttpServletRequest request) {
+    int maxComment;
+
+    try {
+      maxComment = Integer.parseInt(request.getParameter("max-comment"));
+    } catch (NumberFormatException e) {
+      maxComment = Integer.MAX_VALUE;
+    }
+    return maxComment;
   }
 
   @Override
@@ -80,7 +105,7 @@ public class DataServlet extends HttpServlet {
       datastore.delete(entity.getKey());
     }
 
-    response.getWriter().println("Successfully deleted all entries");
+    response.sendRedirect("/index.html#connect");
   }
 
   /**
@@ -95,14 +120,4 @@ public class DataServlet extends HttpServlet {
     return value;
   }
 
-  private int getCommentLimitFromParam(HttpServletRequest request, String parameter) {
-    int maxComment;
-
-    try {
-      maxComment = Integer.parseInt(request.getParameter(parameter));
-    } catch (NumberFormatException e) {
-      maxComment = Integer.MAX_VALUE;
-    }
-    return maxComment;
-  }
 }

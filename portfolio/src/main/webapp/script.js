@@ -54,7 +54,7 @@ function showComments() {
     .then(response => response.json())
     .then(comments => {
       comments.forEach(comment => {
-        renderListComments(comment.propertyMap);
+        renderListComments(comment);
       });
     })
     .catch(error => void console.error(error));
@@ -63,6 +63,7 @@ function showComments() {
 /** Resets session storage value and shows that number of comments. */
 function refreshComments() {
   const maxComment = document.getElementById('max-comment').value;
+
   sessionStorage.setItem('max-comment', maxComment);
   showComments();
 }
@@ -137,15 +138,12 @@ function populateDom() {
 
 /** Removes comments from Datastore. */
 function deleteComments() {
-  if (window.confirm('Do you really want to delete all comments ?')) {
-    console.log('deleting all comments');
-    fetch('/data', {
-      method: 'DELETE'
-    })
+  if (window.confirm("Do you really want to delete all comments ?")) {
+    fetch('/data', {method: 'DELETE'})
     // Call showComments function for the server to be in sync with the lost data.
     .then(showComments)
     .catch(error => void console.error(error));
-    }
+  }
 }
 
 document.addEventListener('DOMContentLoaded', populateDom, false);
