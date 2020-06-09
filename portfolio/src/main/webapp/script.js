@@ -83,33 +83,37 @@ function renderListComments({firstName, lastName, commentText, date}) {
 
 /** Handles user login. */
 function login() {
-  const userInfoContainer = document.querySelector('.login');
-  const loginStatus = document.createElement('a');
-  loginStatus.setAttribute('class', 'nav-link');
 
   fetch('/login')
   .then(response => response.json())
   .then(userInfo => {
-    loginStatus.innerText = userInfo.nickName;
     sessionStorage.setItem('logged-in', userInfo.nickName);
-    
-    const logOutLink = document.createElement('a');
-    logOutLink.setAttribute('class', 'nav-link');
-    logOutLink.innerHTML = "LOG OUT";
-    logOutLink.setAttribute('href', userInfo.logOutUrl);
-    userInfoContainer.appendChild(logOutLink);
+    fillDropDownMenu(userInfo.nickName, '#', userInfo.logOutUrl, '#')
   })
   .catch(error => {
     console.error(error);
     sessionStorage.setItem('logged-in', "");
+
+    const userInfoContainer = document.querySelector('.login');
+    userInfoContainer.innerHTML = '';
+
+    const loginStatus = document.createElement('a');
+    loginStatus.setAttribute('class', 'nav-link');
     loginStatus.innerText = "LOG IN";
     loginStatus.setAttribute('href', '/login');
+    userInfoContainer.appendChild(loginStatus);
   });
 
-  userInfoContainer.innerHTML = '';
-  userInfoContainer.appendChild(loginStatus);
 }
 
+/** Fill information in Dropdown menu in DOM */
+function fillDropDownMenu(item1, item1Link, item2Link, item3Link) {
+  const dropDownContainer = document.querySelector('.login');
+  dropDownContainer.querySelector('.item-1').innerText = item1;
+  dropDownContainer.querySelector('.item-1').setAttribute('href', item1Link);
+  dropDownContainer.querySelector('.item-2').setAttribute('href', item2Link);
+  dropDownContainer.querySelector('.item-3').setAttribute('href', item3Link);
+}
 
 function populateDom() {
   login();
