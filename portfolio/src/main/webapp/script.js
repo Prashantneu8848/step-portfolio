@@ -62,7 +62,6 @@ function showComments() {
 /** Resets session storage value and shows that number of comments. */
 function refreshComments() {
   const maxComment = document.getElementById("max-comment").value;
-  console.log(maxComment);
   sessionStorage.setItem('max-comment', maxComment);
   showComments();
 }
@@ -81,7 +80,39 @@ function renderListComments({firstName, lastName, commentText, date}) {
   document.getElementById('comments').appendChild(content);
 }
 
+
+/** Handles user login. */
+function login() {
+  const userInfoContainer = document.querySelector('.login');
+  const loginStatus = document.createElement('a');
+  loginStatus.setAttribute('class', 'nav-link');
+
+  fetch('/login')
+  .then(response => response.json())
+  .then(userInfo => {
+    loginStatus.innerText = userInfo.nickName;
+    sessionStorage.setItem('logged-in', userInfo.nickName);
+    
+    const logOutLink = document.createElement('a');
+    logOutLink.setAttribute('class', 'nav-link');
+    logOutLink.innerHTML = "LOG OUT";
+    logOutLink.setAttribute('href', userInfo.logOutUrl);
+    userInfoContainer.appendChild(logOutLink);
+  })
+  .catch(error => {
+    console.error(error);
+    sessionStorage.setItem('logged-in', "");
+    loginStatus.innerText = "LOG IN";
+    loginStatus.setAttribute('href', '/login');
+  });
+
+  userInfoContainer.innerHTML = '';
+  userInfoContainer.appendChild(loginStatus);
+}
+
+
 function populateDom() {
+  login();
   showComments();
   addRandomQuote();
 }
