@@ -56,11 +56,6 @@ public class LoginServlet extends HttpServlet {
     }
   }
 
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-  }
-
   static class UserAndLogoutInfo {
     String email;
     String nickName;
