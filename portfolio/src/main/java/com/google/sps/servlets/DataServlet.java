@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -45,7 +45,8 @@ public class DataServlet extends HttpServlet {
     int maxCommentLimit = getCommentLimitFromParam(request);
 
     List<Comment> comments = new ArrayList<>();
-    Iterable<Entity> fetchedComments = results.asIterable(FetchOptions.Builder.withLimit(maxCommentLimit));
+    Iterable<Entity> fetchedComments =
+        results.asIterable(FetchOptions.Builder.withLimit(maxCommentLimit));
 
     for (Entity entity : fetchedComments) {
       String firstName = (String) entity.getProperty("firstName");

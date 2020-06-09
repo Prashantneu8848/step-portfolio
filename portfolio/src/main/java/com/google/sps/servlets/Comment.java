@@ -14,7 +14,7 @@
 
 package com.google.sps.servlets;
 
-/** Encapsulate Datastore entity as comment.*/
+/** Encapsulate Datastore entity as comment. */
 public class Comment {
   private String firstName;
   private String lastName;
