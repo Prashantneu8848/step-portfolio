@@ -44,8 +44,7 @@ public class LoginServlet extends HttpServlet {
       User user = userService.getCurrentUser();
       String logoutUrl = userService.createLogoutURL("/");
 
-      LoginServlet.UserAndLogoutInfo userInfo = 
-          new LoginServlet.UserAndLogoutInfo(user, logoutUrl);
+      UserAndLogoutInfo userInfo = new UserAndLogoutInfo(user, logoutUrl);
 
       String json = gson.toJson(userInfo);
 
@@ -56,17 +55,4 @@ public class LoginServlet extends HttpServlet {
     }
   }
 
-  static class UserAndLogoutInfo {
-    String email;
-    String nickName;
-    String userId;
-    String logOutUrl;
-
-    UserAndLogoutInfo(User user, String logOutUrl) {
-      this.email = user.getEmail();
-      this.nickName = user.getNickname();
-      this.userId = user.getUserId();
-      this.logOutUrl = logOutUrl;
-    }
-  }
 }
