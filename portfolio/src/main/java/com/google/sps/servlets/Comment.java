@@ -15,11 +15,11 @@
 package com.google.sps.servlets;
 
 /** Encapsulate Datastore entity as comment. */
-public class Comment {
-  private String firstName;
-  private String lastName;
-  private String commentText;
-  private String date;
+public final class Comment {
+  private final String firstName;
+  private final String lastName;
+  private final String commentText;
+  private final String date;
 
   public Comment(String firstName, String lastName, String commentText, String date) {
     this.firstName = firstName;
