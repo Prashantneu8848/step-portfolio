@@ -129,3 +129,11 @@ body {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+#map-1,
+#map-2,
+#map-3,
+#map-4 {
+  height: 400px;
+  width: 500px;
+}

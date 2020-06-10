@@ -80,9 +80,25 @@ function renderListComments({firstName, lastName, commentText, date}) {
   document.getElementById('comments').appendChild(content);
 }
 
+function createMap() {
+  const map1 = new google.maps.Map(
+      document.getElementById('map-1'),
+      {center: {lat: -33.856159, lng: 151.215256}, zoom: 16, disableDefaultUI: true});
+  const map2 = new google.maps.Map(
+      document.getElementById('map-2'),
+      {center: {lat: 48.858093, lng: 2.294694}, zoom: 16, disableDefaultUI: true});
+  const map3 = new google.maps.Map(
+      document.getElementById('map-3'),
+      {center: {lat: 41.902782, lng: 12.496366}, zoom: 16, disableDefaultUI: true});
+  const map4 = new google.maps.Map(
+      document.getElementById('map-4'),
+      {center: {lat: 55.751244, lng: 37.618423}, zoom: 16, disableDefaultUI: true});
+}
+
 function populateDom() {
   showComments();
   addRandomQuote();
+  createMap();
 }
 
 /** Removes comments from Datastore. */
