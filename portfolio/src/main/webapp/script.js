@@ -136,7 +136,7 @@ function populateDom() {
 
 document.addEventListener('DOMContentLoaded', populateDom, false);
 
-MAP_STYLE = [
+const MAP_STYLE = [
   {
     "elementType": "geometry",
     "stylers": [
@@ -403,7 +403,7 @@ MAP_STYLE = [
   }
 ]
 
-PLACES = [
+const PLACES = [
   {
     latLng: {lat: 48.858093, lng: 2.294694},
     contentText: 'Eiffel Tower'
