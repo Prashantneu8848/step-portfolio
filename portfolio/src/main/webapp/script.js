@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// import {MAP_STYLE, PLACES} from './constants.js';
+
 /** 
  * Fetches a random element from an array.
  * 
@@ -66,8 +68,14 @@ function refreshComments() {
   showComments();
 }
 
-
-/** Creates an <li> element containing text. */
+/** 
+ * Creates an <li> element containing text.
+ * 
+ * @param {string} firstName First Name of the commenter
+ * @param {string} lastName Last Name of the commenter
+ * @param {string} commentText comment made by the commenter
+ * @param {string} date date when the comment was made
+ */
 function renderListComments({firstName, lastName, commentText, date}) {
   const template = document.getElementById('item-template');
   const content = template.content.cloneNode(true);
@@ -81,24 +89,33 @@ function renderListComments({firstName, lastName, commentText, date}) {
 }
 
 function createMap() {
-  const map1 = new google.maps.Map(
-      document.getElementById('map-1'),
-      {center: {lat: -33.856159, lng: 151.215256}, zoom: 16, disableDefaultUI: true});
-  const map2 = new google.maps.Map(
-      document.getElementById('map-2'),
-      {center: {lat: 48.858093, lng: 2.294694}, zoom: 16, disableDefaultUI: true});
-  const map3 = new google.maps.Map(
-      document.getElementById('map-3'),
-      {center: {lat: 41.902782, lng: 12.496366}, zoom: 16, disableDefaultUI: true});
-  const map4 = new google.maps.Map(
-      document.getElementById('map-4'),
-      {center: {lat: 55.751244, lng: 37.618423}, zoom: 16, disableDefaultUI: true});
+  const map1 = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 19.741755, lng: -155.844437},
+    zoom: 2,
+    disableDefaultUI: true,
+    styles: MAP_STYLE
+    });
+  showInfoWindowAndMarker(map1, PLACES);
 }
 
-function populateDom() {
-  showComments();
-  addRandomQuote();
-  createMap();
+/** 
+ * Creates a window with some context about a place at given marker on the map.
+ * 
+ * @param {google.maps.Map} map map where to show the window
+ * @param {object[]} PLACES array which contains object with place location and info
+ */
+function showInfoWindowAndMarker(map, PLACES) {
+  PLACES.forEach((place) => {
+
+    const marker = new google.maps.Marker({
+      position: place.latLng,
+      map: map,
+      title: place.contentText
+    });
+
+    const infoWindow = new google.maps.InfoWindow({content: place.contentText});
+    infoWindow.open(map, marker);
+  });
 }
 
 /** Removes comments from Datastore. */
@@ -111,4 +128,304 @@ function deleteComments() {
   }
 }
 
+function populateDom() {
+  showComments();
+  addRandomQuote();
+  createMap();
+}
+
 document.addEventListener('DOMContentLoaded', populateDom, false);
+
+MAP_STYLE = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#212121"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#757575"
+      },
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.country",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#9e9e9e"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.land_parcel",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.locality",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#bdbdbd"
+      }
+    ]
+  },
+  {
+    "featureType": "administrative.neighborhood",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#181818"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "color": "#1b1b1b"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#2c2c2c"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#8a8a8a"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#373737"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#3c3c3c"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#4e4e4e"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#616161"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#757575"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#000000"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#763139"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#3d3d3d"
+      }
+    ]
+  }
+]
+
+PLACES = [
+  {
+    latLng: {lat: 48.858093, lng: 2.294694},
+    contentText: 'Eiffel Tower'
+  },
+  {
+    latLng: {lat: -31.856159, lng: 151.215256},
+    contentText: 'Sydney Opera House'
+  },
+  {
+    latLng: {lat: 55.751244, lng: 37.618423},
+    contentText: 'Moscow, Russia'
+  },
+  {
+    latLng: {lat: 29.976480, lng: 31.131302},
+    contentText: 'The Great Pyramid of Giza'
+  },
+  {
+    latLng: {lat: -22.908333, lng: -43.196388},
+    contentText: 'Christ the Redeemer'
+  },
+  {
+    latLng: {lat: 35.360638, lng: 138.729050},
+    contentText: 'Mount Fuji'
+  },
+]
