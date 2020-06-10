@@ -17,11 +17,11 @@ package com.google.sps.servlets;
 import com.google.appengine.api.users.User;
 
 /** Encapsulate User info and logout url. */
-public class UserInfo {
-  private String email;
-  private String nickname;
-  private String userId;
-  private String logOutUrl;
+public final class UserInfo {
+  private final String email;
+  private final String nickname;
+  private final String userId;
+  private final String logOutUrl;
 
   UserInfo(User user, String logOutUrl) {
     this.email = user.getEmail();

@@ -39,7 +39,7 @@ function addRandomQuote() {
     .catch(error => {
       console.error(error);
       quoteContainer.innerText = 'Do what you can, with what you have, where you are.';
-      authorContainer.innerText = 'Theodre Roosevelt';
+      authorContainer.innerText = 'Theodore Roosevelt';
     });
 }
 
@@ -87,26 +87,25 @@ function renderListComments({firstName, lastName, commentText, date}) {
 function login() {
 
   fetch('/login')
-  .then(response => response.json())
-  .then(userInfo => {
-    sessionStorage.setItem('logged-in', userInfo.nickname);
-    fillDropDownMenu(userInfo.nickname, '#', userInfo.logOutUrl, '#')
-  })
-  .catch(() => {
-    sessionStorage.setItem('logged-in', '');
-    showCommentInfo();
-    displayLoginOption();
-  });
+    .then(response => response.json())
+    .then(userInfo => {
+      sessionStorage.setItem('logged-in', userInfo.nickname);
+      fillDropDownMenu(userInfo.nickname, userInfo.logOutUrl, '#')
+    })
+    .catch(() => {
+      sessionStorage.setItem('logged-in', '');
+      showCommentInfo();
+      displayLoginOption();
+    });
 
 }
 
 /** Fill information in Dropdown menu in DOM. */
-function fillDropDownMenu(item1, item1Link, item2Link, item3Link) {
+function fillDropDownMenu(nickname, logOutUrl, setNicknameUrl) {
   const dropDownContainer = document.querySelector('.login');
-  dropDownContainer.querySelector('.item-1').innerText = item1;
-  dropDownContainer.querySelector('.item-1').setAttribute('href', item1Link);
-  dropDownContainer.querySelector('.item-2').setAttribute('href', item2Link);
-  dropDownContainer.querySelector('.item-3').setAttribute('href', item3Link);
+  dropDownContainer.querySelector('.item-1').innerText = nickname;
+  dropDownContainer.querySelector('.item-2').setAttribute('href', logOutUrl);
+  dropDownContainer.querySelector('.item-3').setAttribute('href', setNicknameUrl);
 }
 
 /** Displays login button when user is not signed in. */
@@ -140,9 +139,9 @@ function populateDom() {
 function deleteComments() {
   if (window.confirm("Do you really want to delete all comments ?")) {
     fetch('/data', {method: 'DELETE'})
-    // Call showComments function for the server to be in sync with the lost data.
-    .then(showComments)
-    .catch(error => void console.error(error));
+      // Call showComments function for the server to be in sync with the lost data.
+      .then(showComments)
+      .catch(error => void console.error(error));
   }
 }
 

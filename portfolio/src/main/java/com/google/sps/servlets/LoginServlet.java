@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    response.setContentType("application/json;");
+    
     UserService userService = UserServiceFactory.getUserService();
 
     if (userService.isUserLoggedIn()) {
@@ -47,7 +47,8 @@ public class LoginServlet extends HttpServlet {
       UserInfo userInfo = new UserInfo(user, logoutUrl);
 
       String json = gson.toJson(userInfo);
-
+      
+      response.setContentType("application/json;");
       response.getWriter().println(json);
     } else {
       String loginUrl = userService.createLoginURL("/");
