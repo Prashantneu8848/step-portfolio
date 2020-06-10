@@ -1,13 +1,13 @@
 // Copyright 2019 Google LLC
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2.0 (the 'License');
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
 //     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
+// distributed under the License is distributed on an 'AS IS' BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
@@ -28,7 +28,7 @@ function getRandomElement(array) {
 function addRandomQuote() {
   const quoteContainer = document.getElementById('quote');
   const authorContainer = document.getElementById('author');
-  fetch("https://type.fit/api/quotes")
+  fetch('https://type.fit/api/quotes')
     .then(response => response.json())
     .then(data => {
       const quote = getRandomElement(data);
@@ -38,15 +38,16 @@ function addRandomQuote() {
     })
     .catch(error => {
       console.error(error);
-      quoteContainer.innerText = "Do what you can, with what you have, where you are.";
-      authorContainer.innerText = "Theodre Roosevelt";
+      quoteContainer.innerText = 'Do what you can, with what you have, where you are.';
+      authorContainer.innerText = 'Theodore Roosevelt';
     });
 }
 
 /** Fetches comments from servlet and adds in DOM. */
 function showComments() {
+
   const maxComment = sessionStorage.getItem('max-comment') || 1;
-  document.getElementById("max-comment").value = maxComment;
+  document.getElementById('max-comment').value = maxComment;
   document.getElementById('comments').innerHTML = '';
   
   fetch('/data?max-comment=' + maxComment)
@@ -61,7 +62,8 @@ function showComments() {
 
 /** Resets session storage value and shows that number of comments. */
 function refreshComments() {
-  const maxComment = document.getElementById("max-comment").value;
+  const maxComment = document.getElementById('max-comment').value;
+
   sessionStorage.setItem('max-comment', maxComment);
   showComments();
 }
@@ -80,7 +82,55 @@ function renderListComments({firstName, lastName, commentText, date}) {
   document.getElementById('comments').appendChild(content);
 }
 
+
+/** Handles user login. */
+function login() {
+
+  fetch('/login')
+    .then(response => response.json())
+    .then(userInfo => {
+      sessionStorage.setItem('logged-in', userInfo.nickname);
+      fillDropDownMenu(userInfo.nickname, userInfo.logOutUrl, '#')
+    })
+    .catch(() => {
+      sessionStorage.setItem('logged-in', '');
+      showCommentInfo();
+      displayLoginOption();
+    });
+
+}
+
+/** Fill information in Dropdown menu in DOM. */
+function fillDropDownMenu(nickname, logOutUrl, setNicknameUrl) {
+  const dropDownContainer = document.querySelector('.login');
+  dropDownContainer.querySelector('.item-1').innerText = nickname;
+  dropDownContainer.querySelector('.item-2').setAttribute('href', logOutUrl);
+  dropDownContainer.querySelector('.item-3').setAttribute('href', setNicknameUrl);
+}
+
+/** Displays login button when user is not signed in. */
+function displayLoginOption() {
+  const userInfoContainer = document.querySelector('.login');
+  userInfoContainer.innerHTML = '';
+
+  const loginStatus = document.createElement('a');
+  loginStatus.setAttribute('class', 'nav-link');
+  loginStatus.innerText = 'LOG IN';
+  loginStatus.setAttribute('href', '/login');
+
+  userInfoContainer.appendChild(loginStatus);
+}
+
+
+/** Displays text to login to see comment section. */
+function showCommentInfo() {
+  document.getElementById('comment-section').style.display = 'none';
+  document.getElementById('comment-info').innerText= 'Log In to add and view comments';
+}
+
+
 function populateDom() {
+  login();
   showComments();
   addRandomQuote();
 }
@@ -89,9 +139,9 @@ function populateDom() {
 function deleteComments() {
   if (window.confirm("Do you really want to delete all comments ?")) {
     fetch('/data', {method: 'DELETE'})
-    // Call showComments function for the server to be in sync with the lost data.
-    .then(showComments)
-    .catch(error => void console.error(error));
+      // Call showComments function for the server to be in sync with the lost data.
+      .then(showComments)
+      .catch(error => void console.error(error));
   }
 }
 
