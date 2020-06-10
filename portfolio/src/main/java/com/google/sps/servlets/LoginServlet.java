@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that checks if user is loggin in. */
+/** Servlet that checks if user is logging in. */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
   
@@ -44,7 +44,7 @@ public class LoginServlet extends HttpServlet {
       User user = userService.getCurrentUser();
       String logoutUrl = userService.createLogoutURL("/");
 
-      UserAndLogoutInfo userInfo = new UserAndLogoutInfo(user, logoutUrl);
+      UserInfo userInfo = new UserInfo(user, logoutUrl);
 
       String json = gson.toJson(userInfo);
 

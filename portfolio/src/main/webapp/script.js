@@ -89,8 +89,8 @@ function login() {
   fetch('/login')
   .then(response => response.json())
   .then(userInfo => {
-    sessionStorage.setItem('logged-in', userInfo.nickName);
-    fillDropDownMenu(userInfo.nickName, '#', userInfo.logOutUrl, '#')
+    sessionStorage.setItem('logged-in', userInfo.nickname);
+    fillDropDownMenu(userInfo.nickname, '#', userInfo.logOutUrl, '#')
   })
   .catch(() => {
     sessionStorage.setItem('logged-in', '');
@@ -100,7 +100,7 @@ function login() {
 
 }
 
-/** Fill information in Dropdown menu in DOM */
+/** Fill information in Dropdown menu in DOM. */
 function fillDropDownMenu(item1, item1Link, item2Link, item3Link) {
   const dropDownContainer = document.querySelector('.login');
   dropDownContainer.querySelector('.item-1').innerText = item1;
@@ -123,7 +123,7 @@ function displayLoginOption() {
 }
 
 
-/** Displays text to login to see comment section */
+/** Displays text to login to see comment section. */
 function showCommentInfo() {
   document.getElementById('comment-section').style.display = 'none';
   document.getElementById('comment-info').innerText= 'Log In to add and view comments';
