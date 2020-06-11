@@ -135,3 +135,5 @@ function populateDom() {
 }
 
 document.addEventListener('DOMContentLoaded', populateDom, false);
+document.getElementById('max-comment').addEventListener('change', refreshComments);
+document.getElementById('delete-comment').addEventListener('click', deleteComments);

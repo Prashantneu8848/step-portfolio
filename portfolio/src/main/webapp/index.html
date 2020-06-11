@@ -6,10 +6,10 @@
 <link rel="stylesheet" href="bootstrap.min.css">
 <link rel="stylesheet" href="style.css">
 
-<script type="module" src="script.js"></script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCF3-3GV8n-hWtjrvBqyzc_Bm45nN-Gbwg">
 </script>
+<script type="module" src="script.js"></script>
 <nav class="navbar fixed-top navbar-dark bg-dark">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -211,7 +211,7 @@
   <section class="card text-white bg-dark">
     <header class="card-header">
       COMMENTS
-      <select id="max-comment" value="1" onchange="refreshComments();">
+      <select id="max-comment" value="1">
         <option value="1">1
         <option value="2">2
         <option value="3">3
@@ -220,7 +220,7 @@
         <option value="All">All
       </select>
     </header>
-    <button class="btn btn-danger btn-sm" type="button" onclick="deleteComments();">
+    <button class="btn btn-danger btn-sm" type="button" id="delete-comment">
       Delete Comments
     </button>
     <ul id="comments" class="list-group list-group-flush"></ul>
