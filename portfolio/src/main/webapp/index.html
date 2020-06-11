@@ -25,6 +25,14 @@
         <a class="nav-link" href="#travel">TRAVEL PLANS</a>
       <li class="nav-item">
         <a class="nav-link" href="#connect">CONNECT</a>
+      <li class="nav-item dropdown login">
+        <a class="nav-link dropdown-toggle item-1" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false" id="login-info" href="#"></a>
+        <div class="dropdown-menu" aria-labelledby="login-info">
+          <a class="dropdown-item item-2" href="#">Log Out</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item item-3" href="#">Set Nickname</a>
+        </div>
     </ul>
   </div>
 </nav>
@@ -178,6 +186,7 @@
             rel="noopener noreferrer">GitHub</a>
   </table>
   <a class="nav-link" href="#">Return to Top</a>
+  <p id="comment-info">
 </div>
 <div id="comment-section">
   <p>Have a feedback ? Please leave a comment
@@ -223,6 +232,7 @@
     <button class="btn btn-danger btn-sm" type="button" id="delete-comment">
       Delete Comments
     </button>
+    <p id="comment-info">
     <ul id="comments" class="list-group list-group-flush"></ul>
     <template id="item-template">
       <li class="list-group-item bg-dark"><span class="first-name">  </span> <span class="last-name"></span> commented <span class="comment-text"></span> on <span class="date"></span>
