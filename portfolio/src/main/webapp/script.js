@@ -89,8 +89,10 @@ function login() {
   fetch('/login')
     .then(response => response.json())
     .then(userInfo => {
-      sessionStorage.setItem('logged-in', userInfo.nickname);
-      fillDropDownMenu(userInfo.nickname, userInfo.logOutUrl, '#')
+      // If user has set nickname then display it if not use their email.
+      const userDisplayName = userInfo.nickname || userInfo.email;
+      sessionStorage.setItem('logged-in', userDisplayName);
+      fillDropDownMenu(userDisplayName, userInfo.logOutUrl)
     })
     .catch(() => {
       sessionStorage.setItem('logged-in', '');
@@ -101,11 +103,10 @@ function login() {
 }
 
 /** Fill information in Dropdown menu in DOM. */
-function fillDropDownMenu(nickname, logOutUrl, setNicknameUrl) {
+function fillDropDownMenu(dsiplayName, logOutUrl) {
   const dropDownContainer = document.querySelector('.login');
-  dropDownContainer.querySelector('.item-1').innerText = nickname;
+  dropDownContainer.querySelector('.item-1').innerText = dsiplayName.toUpperCase();
   dropDownContainer.querySelector('.item-2').setAttribute('href', logOutUrl);
-  dropDownContainer.querySelector('.item-3').setAttribute('href', setNicknameUrl);
 }
 
 /** Displays login button when user is not signed in. */
