@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet {
   
   UserService userService = UserServiceFactory.getUserService();
-  
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -69,7 +69,6 @@ public class LoginServlet extends HttpServlet {
     
     datastore.put(entity);
 
-    System.out.println("Your nickanme is = " + nickname);
     response.sendRedirect("/index.html");
   }
 
