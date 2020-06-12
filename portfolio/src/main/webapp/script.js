@@ -48,11 +48,11 @@ function showComments() {
 
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById('max-comment').value = maxComment;
-  document.getElementById('comments').innerHTML = '';
-  
+  document.querySelector('.spinner-border').style.display = 'inline-block';
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
+      document.querySelector('.spinner-border').style.display = 'none';
       comments.forEach(comment => {
         renderListComments(comment);
       });
@@ -133,6 +133,7 @@ function populateDom() {
   login();
   showComments();
   addRandomQuote();
+  document.querySelector('.spinner-border').style.display = 'none';
 }
 
 /** Removes comments from Datastore. */
