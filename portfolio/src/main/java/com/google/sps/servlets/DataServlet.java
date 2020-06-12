@@ -23,6 +23,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.annotation.WebServlet;
@@ -53,8 +55,8 @@ public class DataServlet extends HttpServlet {
       String lastName = (String) entity.getProperty("lastName");
       String commentText = (String) entity.getProperty("commentText");
       String date = (String) entity.getProperty("date");
-
-      Comment comment = new Comment(firstName, lastName, commentText, date);
+      int uniqueId = entity.getKey().hashCode();
+      Comment comment = new Comment(firstName, lastName, commentText, date, uniqueId);
       comments.add(comment);
     }
 
@@ -97,15 +99,21 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").setKeysOnly();
+    // Query query = new Query("Comment").setKeysOnly();
 
-    PreparedQuery results = datastore.prepare(query);
+    // PreparedQuery results = datastore.prepare(query);
     
-    for (Entity entity : results.asIterable()) {
-      datastore.delete(entity.getKey());
-    }
+    // for (Entity entity : results.asIterable()) {
+    //   datastore.delete(entity.getKey());
+    // }
 
-    response.sendRedirect("/index.html#connect");
+    // response.sendRedirect("/index.html#connect");
+    System.out.println("I am being called");
+    System.out.println(request.getParameter("uniqueId"));
+    System.out.println(request.getParameterMap().isEmpty());
+    // for (String key: myMap.keySet()) {
+    //     System.out.println(key);
+    // }
   }
 
   /**
