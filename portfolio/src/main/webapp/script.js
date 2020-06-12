@@ -48,6 +48,7 @@ function showComments() {
 
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById('max-comment').value = maxComment;
+  document.getElementById('comments').innerHTML = '';
   document.querySelector('.spinner-border').style.display = 'inline-block';
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
