@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="bootstrap.min.css">
 <link rel="stylesheet" href="style.css">
 
-<script src="script.js"></script>
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBzVmGNd86ppU0uVTlF7OQQ6Q3YLK7MUI"></script>
+<script type="module" src="script.js"></script>
 <nav class="navbar fixed-top navbar-dark bg-dark">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -19,6 +19,8 @@
         <a class="nav-link" href="#">HOME</a>
       <li class="nav-item">
         <a class="nav-link" href="#about-me">ABOUT</a>
+      <li class="nav-item">
+        <a class="nav-link" href="#travel">TRAVEL PLANS</a>
       <li class="nav-item">
         <a class="nav-link" href="#connect">CONNECT</a>
       <li class="nav-item dropdown login">
@@ -151,6 +153,16 @@
     </a>
   </div>
 </div>
+<div id="background-image-4">
+  <div class="travel">
+    <span class="border">Travel Plans and Destinations.</span>
+  </div>
+</div>
+<div id="travel">
+  <h2>My favorite places around the world where I plan on going someday.</h2>
+  <div id="map">
+  </div>
+</div>
 <div id="background-image-3">
   <div class="connect">
     <span class="border">Connect</span>
@@ -206,7 +218,7 @@
   <section class="card text-white bg-dark">
     <header class="card-header">
       COMMENTS
-      <select id="max-comment" value="1" onchange="refreshComments();">
+      <select id="max-comment" value="1">
         <option value="1">1
         <option value="2">2
         <option value="3">3
@@ -215,7 +227,7 @@
         <option value="All">All
       </select>
     </header>
-    <button class="btn btn-danger btn-sm" type="button" onclick="deleteComments();">
+    <button class="btn btn-danger btn-sm" type="button" id="delete-comment">
       Delete Comments
     </button>
     <p id="comment-info">
