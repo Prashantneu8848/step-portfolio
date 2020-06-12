@@ -49,7 +49,7 @@ function showComments() {
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById('max-comment').value = maxComment;
   document.getElementById('comments').innerHTML = '';
-  
+  document.getElementById('delete-comments').addEventListener('click', () => deleteComment('all'), false);
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
@@ -70,7 +70,7 @@ function refreshComments() {
 
 
 /** Creates an <li> element containing text. */
-function renderListComments({firstName, lastName, commentText, date, uniqueId}) {
+function renderListComments({firstName, lastName, commentText, date, commentId}) {
   const template = document.getElementById('item-template');
   const content = template.content.cloneNode(true);
 
@@ -78,7 +78,7 @@ function renderListComments({firstName, lastName, commentText, date, uniqueId}) 
   content.querySelector('.last-name').innerText = lastName;
   content.querySelector('.comment-text').innerText = commentText;
   content.querySelector('.date').innerText = date;
-  content.querySelector('.close').addEventListener('click', () => deleteMe(uniqueId), false);
+  content.querySelector('.close').addEventListener('click', () => deleteComment(commentId), false);
   document.getElementById('comments').appendChild(content);
 }
 
@@ -128,16 +128,20 @@ function showCommentInfo() {
   document.getElementById('comment-info').innerText= 'Log In to add and view comments';
 }
 
-function deleteMe(uniqueId) {
-  console.log(uniqueId);
-  const data = {'uniqueId': uniqueId};
-  fetch('/delete',
-    {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
-    // Call showComments function for the server to be in sync with the lost data.
-    .catch(error => void console.error(error));
+/** Removes comments from Datastore. */
+function deleteComment(commentId) {
+  let deleteMessage;
+  if (commentId === 'all') {
+    deleteMessage = 'Do you really want to delete all the comments ?';
+  } else {
+    deleteMessage = 'Do you really want to delete this comment ?';
+  }
+  if (window.confirm(deleteMessage)) {
+    fetch('/data?commentId=' + commentId,{method: 'DELETE'})
+      // Call showComments function for the server to be in sync with the lost data.
+      .then(showComments)
+      .catch(error => void console.error(error));
+  }
 }
 
 
@@ -147,14 +151,5 @@ function populateDom() {
   addRandomQuote();
 }
 
-/** Removes comments from Datastore. */
-function deleteComments() {
-  if (window.confirm("Do you really want to delete all comments ?")) {
-    fetch('/data', {method: 'DELETE'})
-      // Call showComments function for the server to be in sync with the lost data.
-      .then(showComments)
-      .catch(error => void console.error(error));
-  }
-}
 
 document.addEventListener('DOMContentLoaded', populateDom, false);

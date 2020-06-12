@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,12 +38,14 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private Query query;
+  private PreparedQuery results;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    Query query = new Query("Comment");
-    PreparedQuery results = datastore.prepare(query);
+    query = new Query("Comment");
+    results = datastore.prepare(query);
 
     int maxCommentLimit = getCommentLimitFromParam(request);
 
@@ -55,8 +58,9 @@ public class DataServlet extends HttpServlet {
       String lastName = (String) entity.getProperty("lastName");
       String commentText = (String) entity.getProperty("commentText");
       String date = (String) entity.getProperty("date");
-      int uniqueId = entity.getKey().hashCode();
-      Comment comment = new Comment(firstName, lastName, commentText, date, uniqueId);
+      String commentId = (String) entity.getProperty("commentId");
+
+      Comment comment = new Comment(firstName, lastName, commentText, date, commentId);
       comments.add(comment);
     }
 
@@ -84,6 +88,7 @@ public class DataServlet extends HttpServlet {
     String lastName = getParameter(request, "last-name", "");
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
+    String commentId = UUID.randomUUID().toString();
 
     Entity commentEntity = new Entity("Comment");
 
@@ -91,6 +96,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("lastName", lastName);
     commentEntity.setProperty("commentText", commentText);
     commentEntity.setProperty("date", commentDate.toString());
+    commentEntity.setProperty("commentId", commentId);
 
     datastore.put(commentEntity);
     
@@ -99,21 +105,25 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Query query = new Query("Comment").setKeysOnly();
+    String commentId = request.getParameter("commentId");
 
-    // PreparedQuery results = datastore.prepare(query);
+    if (!commentId.equals("all")) {
+      query =
+          new Query("Comment")
+              .setFilter(new Query.FilterPredicate("commentId", Query.FilterOperator.EQUAL, commentId));
+
+      results = datastore.prepare(query);
+      datastore.delete(results.asSingleEntity().getKey());
+    } else {
+      query = new Query("Comment").setKeysOnly();
+      results = datastore.prepare(query);
     
-    // for (Entity entity : results.asIterable()) {
-    //   datastore.delete(entity.getKey());
-    // }
+      for (Entity entity : results.asIterable()) {
+        datastore.delete(entity.getKey());
+      }
+    }
 
-    // response.sendRedirect("/index.html#connect");
-    System.out.println("I am being called");
-    System.out.println(request.getParameter("uniqueId"));
-    System.out.println(request.getParameterMap().isEmpty());
-    // for (String key: myMap.keySet()) {
-    //     System.out.println(key);
-    // }
+    response.sendRedirect("/index.html#connect");
   }
 
   /**

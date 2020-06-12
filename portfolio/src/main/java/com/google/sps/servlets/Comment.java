@@ -20,13 +20,13 @@ public final class Comment {
   private final String lastName;
   private final String commentText;
   private final String date;
-  private final int uniqueId;
-
-  public Comment(String firstName, String lastName, String commentText, String date, int uniqueId) {
+  private final String commentId;
+  
+  public Comment(String firstName, String lastName, String commentText, String date, String commentId) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.commentText = commentText;
     this.date = date;
-    this.uniqueId = uniqueId;
+    this.commentId = commentId;
   }
 }
