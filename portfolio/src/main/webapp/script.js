@@ -90,13 +90,13 @@ function renderListComments({firstName, lastName, commentText, date}) {
 }
 
 function createMap() {
-  const map1 = new google.maps.Map(document.getElementById('map'), {
+  const map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 19.741755, lng: -155.844437},
     zoom: 2,
     disableDefaultUI: true,
     styles: MAP_STYLE
-    });
-  showInfoWindowAndMarker(map1, PLACES);
+  });
+  showInfoWindowAndMarker(map, PLACES);
 }
 
 /** 
@@ -105,12 +105,12 @@ function createMap() {
  * @param {google.maps.Map} map map where to show the window
  * @param {object[]} PLACES array which contains object with place location and info
  */
-function showInfoWindowAndMarker(map, PLACES) {
-  PLACES.forEach((place) => {
+function showInfoWindowAndMarker(map, places) {
+  places.forEach((place) => {
 
     const marker = new google.maps.Marker({
-      position: place.latLng,
-      map: map,
+      position: place.coordinate,
+      map,
       title: place.contentText
     });
 

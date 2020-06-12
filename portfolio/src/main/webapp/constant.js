@@ -267,27 +267,27 @@ export const MAP_STYLE = [
 
 export const PLACES = [
   {
-    latLng: {lat: 48.858093, lng: 2.294694},
+    coordinate: {lat: 48.858093, lng: 2.294694},
     contentText: 'Eiffel Tower'
   },
   {
-    latLng: {lat: -31.856159, lng: 151.215256},
+    coordinate: {lat: -31.856159, lng: 151.215256},
     contentText: 'Sydney Opera House'
   },
   {
-    latLng: {lat: 55.751244, lng: 37.618423},
+    coordinate: {lat: 55.751244, lng: 37.618423},
     contentText: 'Moscow, Russia'
   },
   {
-    latLng: {lat: 29.976480, lng: 31.131302},
+    coordinate: {lat: 29.976480, lng: 31.131302},
     contentText: 'The Great Pyramid of Giza'
   },
   {
-    latLng: {lat: -22.908333, lng: -43.196388},
+    coordinate: {lat: -22.908333, lng: -43.196388},
     contentText: 'Christ the Redeemer'
   },
   {
-    latLng: {lat: 35.360638, lng: 138.729050},
+    coordinate: {lat: 35.360638, lng: 138.729050},
     contentText: 'Mount Fuji'
   }
 ]
