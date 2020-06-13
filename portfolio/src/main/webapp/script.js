@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { MAP_STYLE, PLACES } from './constant.js';
+
 /** 
  * Fetches a random element from an array.
  * 
@@ -24,7 +26,6 @@ function getRandomElement(array) {
 }
 
 /** Adds a random quote to the page. */
-
 function addRandomQuote() {
   const quoteContainer = document.getElementById('quote');
   const authorContainer = document.getElementById('author');
@@ -68,8 +69,14 @@ function refreshComments() {
   showComments();
 }
 
-
-/** Creates an <li> element containing text. */
+/** 
+ * Creates an <li> element containing text.
+ * 
+ * @param {string} firstName First Name of the commenter
+ * @param {string} lastName Last Name of the commenter
+ * @param {string} commentText comment made by the commenter
+ * @param {string} date date when the comment was made
+ */
 function renderListComments({firstName, lastName, commentText, date}) {
   const template = document.getElementById('item-template');
   const content = template.content.cloneNode(true);
@@ -82,6 +89,35 @@ function renderListComments({firstName, lastName, commentText, date}) {
   document.getElementById('comments').appendChild(content);
 }
 
+function createMap() {
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 19.741755, lng: -155.844437},
+    zoom: 2,
+    disableDefaultUI: true,
+    styles: MAP_STYLE
+  });
+  showInfoWindowAndMarker(map, PLACES);
+}
+
+/** 
+ * Creates a window with some context about a place at given marker on the map.
+ * 
+ * @param {google.maps.Map} map map where to show the window
+ * @param {object[]} PLACES array which contains object with place location and info
+ */
+function showInfoWindowAndMarker(map, places) {
+  places.forEach((place) => {
+
+    const marker = new google.maps.Marker({
+      position: place.coordinate,
+      map,
+      title: place.contentText
+    });
+
+    const infoWindow = new google.maps.InfoWindow({content: place.contentText});
+    infoWindow.open(map, marker);
+  });
+}
 
 /** Handles user login. */
 function login() {
@@ -102,8 +138,14 @@ function login() {
 
 }
 
-/** Fill information in Dropdown menu in DOM. */
-function fillDropDownMenu(dsiplayName, logOutUrl) {
+/** 
+ * Fill information in Dropdown menu in DOM.
+ * 
+ * @param {string} nickname nickname of the user loggen in
+ * @param {string} logOutUrl url to log out the user
+ * @param {string} setNicknameUrl url to take user to nickname setup page.
+ */
+function fillDropDownMenu(nickname, logOutUrl, setNicknameUrl) {
   const dropDownContainer = document.querySelector('.login');
   dropDownContainer.querySelector('.item-1').innerText = dsiplayName.toUpperCase();
   dropDownContainer.querySelector('.item-2').setAttribute('href', logOutUrl);
@@ -134,6 +176,7 @@ function populateDom() {
   login();
   showComments();
   addRandomQuote();
+  createMap();
 }
 
 /** Removes comments from Datastore. */
@@ -147,3 +190,5 @@ function deleteComments() {
 }
 
 document.addEventListener('DOMContentLoaded', populateDom, false);
+document.getElementById('max-comment').addEventListener('change', refreshComments);
+document.getElementById('delete-comment').addEventListener('click', deleteComments);
