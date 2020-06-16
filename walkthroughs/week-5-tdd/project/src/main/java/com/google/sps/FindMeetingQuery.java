@@ -15,9 +15,46 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+    long meetingDuration = request.getDuration();
+    Collection<TimeRange> workable = new ArrayList<>();
+    
+    List<TimeRange> conflicts = new ArrayList<>();
+    int previousTimeEnd = 0;
+    for (Event event: events) {
+      Set<String> attendeesForThisEvent = event.getAttendees();
+      if (intersectingAttendee(attendeesForThisEvent, request.getAttendees())) {
+        conflicts.add(event.getWhen());
+      }
+    }
+    Collections.sort(conflicts, TimeRange.ORDER_BY_START);
+    int freeTimeStampStart = TimeRange.START_OF_DAY;
+    int freeTimeStampEnd = 0;
+    for (TimeRange conflict : conflicts) {
+      freeTimeStampEnd = conflict.start();
+      if (meetingDuration <= freeTimeStampEnd - freeTimeStampStart) {
+        workable.add(TimeRange.fromStartEnd(freeTimeStampStart, freeTimeStampEnd, false));
+      }
+      previousTimeEnd = freeTimeStampStart;
+      freeTimeStampStart = previousTimeEnd > conflict.end() ? previousTimeEnd : conflict.end();
+    }
+     if (TimeRange.END_OF_DAY - freeTimeStampStart >= meetingDuration) {
+      workable.add(TimeRange.fromStartEnd(freeTimeStampStart, TimeRange.END_OF_DAY, true));
+    }
+
+    return workable;
+  }
+
+  private boolean intersectingAttendee(Set<String> eventAttendees, Collection<String> meetingAttendees) {
+    for (String attendee: eventAttendees) {
+      if (meetingAttendees.contains(attendee)) return true;
+    }
+    return false;
   }
 }
