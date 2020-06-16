@@ -70,7 +70,7 @@ function refreshComments() {
 
 
 /** Creates an <li> element containing text. */
-function renderListComments({firstName, lastName, commentText, date, commentId}) {
+function renderListComments({firstName, lastName, commentText, date, id}) {
   const template = document.getElementById('item-template');
   const content = template.content.cloneNode(true);
 
@@ -78,7 +78,7 @@ function renderListComments({firstName, lastName, commentText, date, commentId})
   content.querySelector('.last-name').innerText = lastName;
   content.querySelector('.comment-text').innerText = commentText;
   content.querySelector('.date').innerText = date;
-  content.querySelector('.close').addEventListener('click', () => deleteComment(commentId), false);
+  content.querySelector('.close').addEventListener('click', () => deleteComment(id), false);
   document.getElementById('comments').appendChild(content);
 }
 
@@ -129,15 +129,15 @@ function showCommentInfo() {
 }
 
 /** Removes comments from Datastore. */
-function deleteComment(commentId) {
+function deleteComment(id) {
   let deleteMessage;
-  if (commentId === 'all') {
+  if (id === 'all') {
     deleteMessage = 'Do you really want to delete all the comments ?';
   } else {
     deleteMessage = 'Do you really want to delete this comment ?';
   }
   if (window.confirm(deleteMessage)) {
-    fetch('/data?commentId=' + commentId,{method: 'DELETE'})
+    fetch('/data?id=' + id,{method: 'DELETE'})
       // Call showComments function for the server to be in sync with the lost data.
       .then(showComments)
       .catch(error => void console.error(error));

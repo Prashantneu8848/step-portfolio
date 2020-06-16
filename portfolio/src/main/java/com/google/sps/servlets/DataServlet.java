@@ -58,9 +58,16 @@ public class DataServlet extends HttpServlet {
       String lastName = (String) entity.getProperty("lastName");
       String commentText = (String) entity.getProperty("commentText");
       String date = (String) entity.getProperty("date");
-      String commentId = (String) entity.getProperty("commentId");
+      String id = (String) entity.getProperty("id");
 
-      Comment comment = new Comment(firstName, lastName, commentText, date, commentId);
+      Comment comment = Comment.builder()
+          .setfirstName(firstName)
+          .setLastName(lastName)
+          .setCommentText(commentText)
+          .setDate(date)
+          .setId(id)
+          .build();
+
       comments.add(comment);
     }
 
@@ -88,7 +95,7 @@ public class DataServlet extends HttpServlet {
     String lastName = getParameter(request, "last-name", "");
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
-    String commentId = UUID.randomUUID().toString();
+    String id = UUID.randomUUID().toString();
 
     Entity commentEntity = new Entity("Comment");
 
@@ -96,7 +103,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("lastName", lastName);
     commentEntity.setProperty("commentText", commentText);
     commentEntity.setProperty("date", commentDate.toString());
-    commentEntity.setProperty("commentId", commentId);
+    commentEntity.setProperty("id", id);
 
     datastore.put(commentEntity);
     
@@ -105,12 +112,12 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String commentId = request.getParameter("commentId");
+    String id = request.getParameter("id");
 
-    if (!commentId.equals("all")) {
+    if (!id.equals("all")) {
       query =
           new Query("Comment")
-              .setFilter(new Query.FilterPredicate("commentId", Query.FilterOperator.EQUAL, commentId));
+              .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
 
       results = datastore.prepare(query);
       datastore.delete(results.asSingleEntity().getKey());
