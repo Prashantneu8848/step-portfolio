@@ -25,24 +25,26 @@ public final class FindMeetingQuery {
     long meetingDuration = request.getDuration();
     Collection<TimeRange> workable = new ArrayList<>();
     
-    List<TimeRange> conflicts = new ArrayList<>();
-    int previousTimeEnd = 0;
+    List<TimeRange> conflictTimes = new ArrayList<>();
+    int previousLargeMeetingPoint = 0;
     for (Event event: events) {
       Set<String> attendeesForThisEvent = event.getAttendees();
       if (intersectingAttendee(attendeesForThisEvent, request.getAttendees())) {
-        conflicts.add(event.getWhen());
+        conflictTimes.add(event.getWhen());
       }
     }
-    Collections.sort(conflicts, TimeRange.ORDER_BY_START);
+    Collections.sort(conflictTimes, TimeRange.ORDER_BY_START);
     int freeTimeStampStart = TimeRange.START_OF_DAY;
     int freeTimeStampEnd = 0;
-    for (TimeRange conflict : conflicts) {
-      freeTimeStampEnd = conflict.start();
+    for (TimeRange conflictTime : conflictTimes) {
+      freeTimeStampEnd = conflictTime.start();
       if (meetingDuration <= freeTimeStampEnd - freeTimeStampStart) {
         workable.add(TimeRange.fromStartEnd(freeTimeStampStart, freeTimeStampEnd, false));
       }
-      previousTimeEnd = freeTimeStampStart;
-      freeTimeStampStart = previousTimeEnd > conflict.end() ? previousTimeEnd : conflict.end();
+      if (previousLargeMeetingPoint < freeTimeStampEnd) {
+        previousLargeMeetingPoint = freeTimeStampStart;
+      }
+      freeTimeStampStart = previousLargeMeetingPoint > conflictTime.end() ? previousLargeMeetingPoint : conflictTime.end();
     }
      if (TimeRange.END_OF_DAY - freeTimeStampStart >= meetingDuration) {
       workable.add(TimeRange.fromStartEnd(freeTimeStampStart, TimeRange.END_OF_DAY, true));
