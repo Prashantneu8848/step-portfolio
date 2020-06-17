@@ -50,10 +50,11 @@ function showComments() {
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById('max-comment').value = maxComment;
   document.getElementById('comments').innerHTML = '';
-  
+  document.getElementById('spinner').classList.toggle('spinner-border');
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
     .then(comments => {
+      document.getElementById('spinner').classList.toggle('spinner-border');
       comments.forEach(comment => {
         renderListComments(comment);
       });
