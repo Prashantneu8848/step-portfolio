@@ -24,7 +24,6 @@ import java.util.HashSet;
 public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    long meetingDuration = request.getDuration();
 
     Collection<TimeRange> workableTimesForMandatoryAttendees = findOptimalTime(events, request, true);
     if (request.getOptionalAttendees().isEmpty()) return workableTimesForMandatoryAttendees;
@@ -36,9 +35,11 @@ public final class FindMeetingQuery {
     
     Collection<TimeRange> workableForBoth = new ArrayList<>();
 
-    for (TimeRange workable4Optional : workableTimesForOptionalAttendees) {
-      for (TimeRange workable4Mandatory : workableTimesForMandatoryAttendees) {
-        if (workable4Optional.contains(workable4Mandatory) && !workableForBoth.contains(workable4Mandatory)) workableForBoth.add(workable4Mandatory);
+    for (TimeRange workableForOptionalAttendees : workableTimesForOptionalAttendees) {
+      for (TimeRange workableForMandatoryAttendees : workableTimesForMandatoryAttendees) {
+        if (workableForOptionalAttendees.contains(workableForMandatoryAttendees) && !workableForBoth.contains(workableForMandatoryAttendees)) {
+          workableForBoth.add(workableForMandatoryAttendees);
+        }
       }
     }
 
