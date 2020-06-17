@@ -23,9 +23,9 @@ public final class UserInfo {
   private final String userId;
   private final String logOutUrl;
 
-  UserInfo(User user, String logOutUrl) {
+  UserInfo(User user, String nickname, String logOutUrl) {
     this.email = user.getEmail();
-    this.nickname = user.getNickname();
+    this.nickname = nickname;
     this.userId = user.getUserId();
     this.logOutUrl = logOutUrl;
   }

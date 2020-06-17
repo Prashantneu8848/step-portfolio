@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="bootstrap.min.css">
 <link rel="stylesheet" href="style.css">
 
-<script src="script.js"></script>
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBzVmGNd86ppU0uVTlF7OQQ6Q3YLK7MUI"></script>
+<script type="module" src="script.js"></script>
 <nav class="navbar fixed-top navbar-dark bg-dark">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -20,6 +20,8 @@
       <li class="nav-item">
         <a class="nav-link" href="#about-me">ABOUT</a>
       <li class="nav-item">
+        <a class="nav-link" href="#travel">TRAVEL PLANS</a>
+      <li class="nav-item">
         <a class="nav-link" href="#connect">CONNECT</a>
       <li class="nav-item dropdown login">
         <a class="nav-link dropdown-toggle item-1" role="button" data-toggle="dropdown"
@@ -27,7 +29,10 @@
         <div class="dropdown-menu" aria-labelledby="login-info">
           <a class="dropdown-item item-2" href="#">Log Out</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item item-3" href="#">Set Nickname</a>
+          <button type="button" class="btn dropdown-item item-3" data-toggle="modal"
+              data-target="#nickname-modal">
+            Set Nickname
+          </button>
         </div>
     </ul>
   </div>
@@ -151,6 +156,16 @@
     </a>
   </div>
 </div>
+<div id="background-image-4">
+  <div class="travel">
+    <span class="border">Travel Plans and Destinations.</span>
+  </div>
+</div>
+<div id="travel">
+  <h2>My favorite places around the world where I plan on going someday.</h2>
+  <div id="map">
+  </div>
+</div>
 <div id="background-image-3">
   <div class="connect">
     <span class="border">Connect</span>
@@ -181,7 +196,7 @@
     Add Comment
   </button>
 
-  <form action="/data" method="POST" class="collapse border-dark" id="comment-form">
+  <form action="/data" method="post" class="collapse border-dark" id="comment-form">
     <p>Please complete the Comment form
     <div>
       <div class="form-row">
@@ -206,7 +221,7 @@
   <section class="card text-white bg-dark">
     <header class="card-header">
       COMMENTS
-      <select id="max-comment" value="1" onchange="refreshComments();">
+      <select id="max-comment" value="1">
         <option value="1">1
         <option value="2">2
         <option value="3">3
@@ -218,12 +233,41 @@
     <button class="btn btn-danger btn-sm" type="button" id="delete-comments">
       Delete Comments
     </button>
+    <div role="status" id="spinner">
+      <span class="sr-only">Loading...</span>
+    </div>
     <p id="comment-info">
     <ul id="comments" class="list-group list-group-flush"></ul>
     <template id="item-template">
       <li class="list-group-item bg-dark"><span class="first-name">  </span> <span class="last-name"></span> commented <span class="comment-text"></span> on <span class="date"></span> <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     </template>
   </section>
+</div>
+
+<!-- Modal for setting nickname -->
+<div class="modal fade" id="nickname-modal" tabindex="-1" role="dialog"
+    aria-labelledby="nickname-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nickname-modal-title">Set Nickname</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/login" method="post" id="nickname-form">
+        <div class="modal-body">
+            <label for="nickname">Nickname</label>
+            <input class="form-control" id="nickname" aria-describedby="nickname-info"
+                placeholder="Enter Nickname" name="nickname" required>
+            <span id="nickname-info" class="form-text text-muted">This nickname will be associated with your account.</span>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script src="jquery.slim.min.js"></script>
