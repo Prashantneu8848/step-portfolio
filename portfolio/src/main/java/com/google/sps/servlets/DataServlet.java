@@ -38,14 +38,12 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private Query query;
-  private PreparedQuery results;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    query = new Query("Comment");
-    results = datastore.prepare(query);
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
 
     int maxCommentLimit = getCommentLimitFromParam(request);
 
@@ -113,7 +111,8 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String id = request.getParameter("id");
-
+    Query query;
+    PreparedQuery results;
     if (!id.equals("all")) {
       query =
           new Query("Comment")
