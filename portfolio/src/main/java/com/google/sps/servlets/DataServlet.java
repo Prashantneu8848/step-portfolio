@@ -23,8 +23,11 @@ import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,8 +56,16 @@ public class DataServlet extends HttpServlet {
       String lastName = (String) entity.getProperty("lastName");
       String commentText = (String) entity.getProperty("commentText");
       String date = (String) entity.getProperty("date");
+      String id = (String) entity.getProperty("id");
 
-      Comment comment = new Comment(firstName, lastName, commentText, date);
+      Comment comment = Comment.builder()
+          .setfirstName(firstName)
+          .setLastName(lastName)
+          .setCommentText(commentText)
+          .setDate(date)
+          .setId(id)
+          .build();
+
       comments.add(comment);
     }
 
@@ -82,6 +93,7 @@ public class DataServlet extends HttpServlet {
     String lastName = getParameter(request, "last-name", "");
     String commentText = getParameter(request, "comment", "");
     Date commentDate = new Date();
+    String id = UUID.randomUUID().toString();
 
     Entity commentEntity = new Entity("Comment");
 
@@ -89,6 +101,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("lastName", lastName);
     commentEntity.setProperty("commentText", commentText);
     commentEntity.setProperty("date", commentDate.toString());
+    commentEntity.setProperty("id", id);
 
     datastore.put(commentEntity);
     
@@ -97,12 +110,23 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").setKeysOnly();
+    String id = request.getParameter("id");
+    Query query;
+    PreparedQuery results;
+    if (!id.equals("all")) {
+      query =
+          new Query("Comment")
+              .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
 
-    PreparedQuery results = datastore.prepare(query);
+      results = datastore.prepare(query);
+      datastore.delete(results.asSingleEntity().getKey());
+    } else {
+      query = new Query("Comment").setKeysOnly();
+      results = datastore.prepare(query);
     
-    for (Entity entity : results.asIterable()) {
-      datastore.delete(entity.getKey());
+      for (Entity entity : results.asIterable()) {
+        datastore.delete(entity.getKey());
+      }
     }
 
     response.sendRedirect("/index.html#connect");

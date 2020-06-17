@@ -50,6 +50,7 @@ function showComments() {
   const maxComment = sessionStorage.getItem('max-comment') || 1;
   document.getElementById('max-comment').value = maxComment;
   document.getElementById('comments').innerHTML = '';
+  document.getElementById('delete-comments').addEventListener('click', () => deleteComment('all'), false);
   document.getElementById('spinner').classList.toggle('spinner-border');
   fetch('/data?max-comment=' + maxComment)
     .then(response => response.json())
@@ -77,8 +78,9 @@ function refreshComments() {
  * @param {string} lastName Last Name of the commenter
  * @param {string} commentText comment made by the commenter
  * @param {string} date date when the comment was made
+ * @param {string} id unique id of the specific comment
  */
-function renderListComments({firstName, lastName, commentText, date}) {
+function renderListComments({firstName, lastName, commentText, date, id}) {
   const template = document.getElementById('item-template');
   const content = template.content.cloneNode(true);
 
@@ -86,7 +88,7 @@ function renderListComments({firstName, lastName, commentText, date}) {
   content.querySelector('.last-name').innerText = lastName;
   content.querySelector('.comment-text').innerText = commentText;
   content.querySelector('.date').innerText = date;
-
+  content.querySelector('.close').addEventListener('click', () => deleteComment(id), false);
   document.getElementById('comments').appendChild(content);
 }
 
@@ -173,6 +175,22 @@ function showCommentInfo() {
   document.getElementById('comment-info').innerText= 'Log In to add and view comments';
 }
 
+/** Removes comments from Datastore. */
+function deleteComment(id) {
+  let deleteMessage;
+  if (id === 'all') {
+    deleteMessage = 'Do you really want to delete all the comments ?';
+  } else {
+    deleteMessage = 'Do you really want to delete this comment ?';
+  }
+  if (window.confirm(deleteMessage)) {
+    fetch('/data?id=' + id,{method: 'DELETE'})
+      // Call showComments function for the server to be in sync with the lost data.
+      .then(showComments)
+      .catch(error => void console.error(error));
+  }
+}
+
 
 function populateDom() {
   login();
@@ -181,15 +199,6 @@ function populateDom() {
   createMap();
 }
 
-/** Removes comments from Datastore. */
-function deleteComments() {
-  if (window.confirm("Do you really want to delete all comments ?")) {
-    fetch('/data', {method: 'DELETE'})
-      // Call showComments function for the server to be in sync with the lost data.
-      .then(showComments)
-      .catch(error => void console.error(error));
-  }
-}
 
 document.addEventListener('DOMContentLoaded', populateDom, false);
 document.getElementById('max-comment').addEventListener('change', refreshComments);

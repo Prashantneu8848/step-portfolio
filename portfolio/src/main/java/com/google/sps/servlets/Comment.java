@@ -14,17 +14,28 @@
 
 package com.google.sps.servlets;
 
-/** Encapsulate Datastore entity as comment. */
-public final class Comment {
-  private final String firstName;
-  private final String lastName;
-  private final String commentText;
-  private final String date;
+import com.google.auto.value.AutoValue;
 
-  public Comment(String firstName, String lastName, String commentText, String date) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.commentText = commentText;
-    this.date = date;
+/** Encapsulate Datastore entity as comment. */
+@AutoValue
+abstract class Comment {
+  abstract String firstName();
+  abstract String lastName();
+  abstract String commentText();
+  abstract String date();
+  abstract String id();
+
+  static Builder builder() {
+    return new AutoValue_Comment.Builder();
+  }
+
+  @AutoValue.Builder
+  abstract static class Builder {
+    abstract Builder setfirstName(String value);
+    abstract Builder setLastName(String value);
+    abstract Builder setCommentText(String value);
+    abstract Builder setDate(String value);
+    abstract Builder setId(String value);
+    abstract Comment build();
   }
 }
