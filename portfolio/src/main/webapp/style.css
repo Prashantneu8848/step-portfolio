@@ -134,3 +134,7 @@ body {
   height: 600px;
   width: 100%;
 }
+
+#nickname-info {
+  font-size: small;
+}

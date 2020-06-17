@@ -29,7 +29,10 @@
         <div class="dropdown-menu" aria-labelledby="login-info">
           <a class="dropdown-item item-2" href="#">Log Out</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item item-3" href="#">Set Nickname</a>
+          <button type="button" class="btn dropdown-item item-3" data-toggle="modal"
+              data-target="#nickname-modal">
+            Set Nickname
+          </button>
         </div>
     </ul>
   </div>
@@ -193,7 +196,7 @@
     Add Comment
   </button>
 
-  <form action="/data" method="POST" class="collapse border-dark" id="comment-form">
+  <form action="/data" method="post" class="collapse border-dark" id="comment-form">
     <p>Please complete the Comment form
     <div>
       <div class="form-row">
@@ -236,6 +239,32 @@
       <li class="list-group-item bg-dark"><span class="first-name">  </span> <span class="last-name"></span> commented <span class="comment-text"></span> on <span class="date"></span>
     </template>
   </section>
+</div>
+
+<!-- Modal for setting nickname -->
+<div class="modal fade" id="nickname-modal" tabindex="-1" role="dialog"
+    aria-labelledby="nickname-modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="nickname-modal-title">Set Nickname</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/login" method="post" id="nickname-form">
+        <div class="modal-body">
+            <label for="nickname">Nickname</label>
+            <input class="form-control" id="nickname" aria-describedby="nickname-info"
+                placeholder="Enter Nickname" name="nickname" required>
+            <span id="nickname-info" class="form-text text-muted">This nickname will be associated with your account.</span>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script src="jquery.slim.min.js"></script>
