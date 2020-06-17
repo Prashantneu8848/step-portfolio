@@ -277,7 +277,8 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
-
+  
+  // 1
   @Test
   public void optionalAttendeeBusyAllDayIsConsidered() {
 
@@ -286,7 +287,7 @@ public final class FindMeetingQueryTest {
             Arrays.asList(PERSON_A)),
         new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_B)),
-        new Event("Event 3", TimeRange.fromStartDuration(TIME_0800AM, DURATION_8_HOUR),
+        new Event("Event 3", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY, true),
             Arrays.asList(PERSON_C)));
 
     MeetingRequest request =
@@ -303,6 +304,7 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
+  // 2
   @Test
   public void optionalAttendeeIsConsidered() {
 
@@ -311,7 +313,7 @@ public final class FindMeetingQueryTest {
             Arrays.asList(PERSON_A)),
         new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_B)),
-        new Event("Event 3", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
+        new Event("Event 3", TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_C)));
 
     MeetingRequest request =
@@ -327,6 +329,7 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
+  // 3
   @Test
   public void justEnoughRoomWithOptionalAttendee() {
 
@@ -348,17 +351,19 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
+  // 4
   @Test
   public void justOptionalAttendeesWithEventGaps() {
 
     Collection<Event> events = Arrays.asList(
-        new Event("Event 1", TimeRange.fromStartEnd(TIME_0800AM, DURATION_15_MINUTES, false),
+        new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_15_MINUTES),
             Arrays.asList(PERSON_A)),
-        new Event("Event 2", TimeRange.fromStartEnd(TIME_0830AM, DURATION_30_MINUTES, false),
+        // time between event 1 and event 2 should not be added as the meeting duration is 30 mins.
+        new Event("Event 2", TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_B)),
-        new Event("Event 3", TimeRange.fromStartEnd(TIME_0930AM, DURATION_30_MINUTES, false),
+        new Event("Event 3", TimeRange.fromStartDuration(TIME_0930AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_A)),
-        new Event("Event 4", TimeRange.fromStartEnd(TIME_1030AM, DURATION_30_MINUTES, false),
+        new Event("Event 4", TimeRange.fromStartDuration(TIME_1030AM, DURATION_30_MINUTES),
             Arrays.asList(PERSON_B)));
 
     MeetingRequest request = new MeetingRequest(Collections.emptyList(), DURATION_30_MINUTES);
@@ -368,7 +373,6 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected =
         Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
-            TimeRange.fromStartEnd(TIME_0815AM, TIME_0830AM, false),
             TimeRange.fromStartEnd(TIME_0900AM, TIME_0930AM, false),
             TimeRange.fromStartEnd(TIME_1000AM, TIME_1030AM, false),
             TimeRange.fromStartEnd(TIME_1100AM, TimeRange.END_OF_DAY, true));
@@ -376,6 +380,7 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
+  // 5
   @Test
   public void justOptionalAttendeesWithNoGaps() {
 
@@ -390,12 +395,7 @@ public final class FindMeetingQueryTest {
     request.addOptionalAttendee(PERSON_B);
 
     Collection<TimeRange> actual = query.query(events, request);
-    Collection<TimeRange> expected =
-        Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
-            TimeRange.fromStartEnd(TIME_0815AM, TIME_0830AM, false),
-            TimeRange.fromStartEnd(TIME_0900AM, TIME_0930AM, false),
-            TimeRange.fromStartEnd(TIME_1000AM, TIME_1030AM, false),
-            TimeRange.fromStartEnd(TIME_1100AM, TimeRange.END_OF_DAY, true));
+    Collection<TimeRange> expected = Collections.emptyList();
 
     Assert.assertEquals(expected, actual);
   }

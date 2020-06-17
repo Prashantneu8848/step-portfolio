@@ -19,37 +19,67 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 public final class FindMeetingQuery {
+
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long meetingDuration = request.getDuration();
-    Collection<TimeRange> workable = new ArrayList<>();
+
+    Collection<TimeRange> workableTimesForMandatoryAttendees = findOptimalTime(events, request, true);
+    if (request.getOptionalAttendees().isEmpty()) return workableTimesForMandatoryAttendees;
+
+    Collection<TimeRange> workableTimesForOptionalAttendees = findOptimalTime(events, request, false);
+    if (request.getAttendees().isEmpty()) return workableTimesForOptionalAttendees;
+
+    if (workableTimesForOptionalAttendees.size() == 0) return workableTimesForMandatoryAttendees;
     
+    Collection<TimeRange> workableForBoth = new ArrayList<>();
+
+    for (TimeRange workable4Optional : workableTimesForOptionalAttendees) {
+      for (TimeRange workable4Mandatory : workableTimesForMandatoryAttendees) {
+        if (workable4Optional.contains(workable4Mandatory) && !workableForBoth.contains(workable4Mandatory)) workableForBoth.add(workable4Mandatory);
+      }
+    }
+
+    if (workableForBoth.isEmpty()) return workableTimesForMandatoryAttendees;
+
+    return workableForBoth;
+  }
+
+  private Collection<TimeRange> findOptimalTime(Collection<Event> events, MeetingRequest request, Boolean mandatory) {
+    long meetingDuration = request.getDuration();
+    Collection<TimeRange> workable = new ArrayList<>();        
     List<TimeRange> conflictTimes = new ArrayList<>();
-    int previousLargeMeetingPoint = 0;
     for (Event event: events) {
       Set<String> attendeesForThisEvent = event.getAttendees();
-      if (intersectingAttendee(attendeesForThisEvent, request.getAttendees())) {
-        conflictTimes.add(event.getWhen());
+      if (mandatory) {
+        if (intersectingAttendee(attendeesForThisEvent, request.getAttendees())) {
+          conflictTimes.add(event.getWhen());
+        }
+      } else {
+        if (intersectingAttendee(attendeesForThisEvent, request.getOptionalAttendees())) {
+          conflictTimes.add(event.getWhen());
+        }
       }
     }
     Collections.sort(conflictTimes, TimeRange.ORDER_BY_START);
-    int freeTimeStampStart = TimeRange.START_OF_DAY;
-    int freeTimeStampEnd = 0;
+    int workableTimeStart = TimeRange.START_OF_DAY;
+    int workableTimeEnd = 0;
+    int previousLargeConflictEnd = 0;
     for (TimeRange conflictTime : conflictTimes) {
-      freeTimeStampEnd = conflictTime.start();
-      if (meetingDuration <= freeTimeStampEnd - freeTimeStampStart) {
-        workable.add(TimeRange.fromStartEnd(freeTimeStampStart, freeTimeStampEnd, false));
+      workableTimeEnd = conflictTime.start();
+      if (meetingDuration <= workableTimeEnd - workableTimeStart) {
+        workable.add(TimeRange.fromStartEnd(workableTimeStart, workableTimeEnd, false));
       }
-      if (previousLargeMeetingPoint < freeTimeStampEnd) {
-        previousLargeMeetingPoint = freeTimeStampStart;
+      if (previousLargeConflictEnd < conflictTime.end()) {
+        previousLargeConflictEnd = conflictTime.end();
       }
-      freeTimeStampStart = previousLargeMeetingPoint > conflictTime.end() ? previousLargeMeetingPoint : conflictTime.end();
+      workableTimeStart = previousLargeConflictEnd > conflictTime.end() ? previousLargeConflictEnd : conflictTime.end();
     }
-     if (TimeRange.END_OF_DAY - freeTimeStampStart >= meetingDuration) {
-      workable.add(TimeRange.fromStartEnd(freeTimeStampStart, TimeRange.END_OF_DAY, true));
+    if (TimeRange.END_OF_DAY - workableTimeStart >= meetingDuration) {
+      workable.add(TimeRange.fromStartEnd(workableTimeStart, TimeRange.END_OF_DAY, true));
     }
-
     return workable;
   }
 
