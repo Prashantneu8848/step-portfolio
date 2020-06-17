@@ -304,7 +304,6 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
-  // 2
   @Test
   public void optionalAttendeeIsConsidered() {
 
@@ -329,7 +328,6 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
-  // 3
   @Test
   public void justEnoughRoomWithOptionalAttendee() {
 
@@ -351,7 +349,6 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
-  // 4
   @Test
   public void justOptionalAttendeesWithEventGaps() {
 
@@ -380,7 +377,6 @@ public final class FindMeetingQueryTest {
     Assert.assertEquals(expected, actual);
   }
 
-  // 5
   @Test
   public void justOptionalAttendeesWithNoGaps() {
 

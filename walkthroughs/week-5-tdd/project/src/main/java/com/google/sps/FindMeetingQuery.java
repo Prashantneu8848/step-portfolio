@@ -14,43 +14,75 @@
 
 package com.google.sps;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    long meetingDuration = request.getDuration();
 
-    Collection<TimeRange> workableTimesForMandatoryAttendees = findOptimalTime(events, request, true);
+    ArrayList<TimeRange> workableTimesForMandatoryAttendees = findOptimalTime(events, request, true);
+
+    // If there are no optional attendees, then provide time for mandatory attendees.
     if (request.getOptionalAttendees().isEmpty()) return workableTimesForMandatoryAttendees;
 
-    Collection<TimeRange> workableTimesForOptionalAttendees = findOptimalTime(events, request, false);
+    ArrayList<TimeRange> workableTimesForOptionalAttendees = findOptimalTime(events, request, false);
+
+    // If there are no mandatory attendees, then provide time for optional attendees.
     if (request.getAttendees().isEmpty()) return workableTimesForOptionalAttendees;
 
+    // If optional attendees could not attend, then provide time for mandatory attendees only.
     if (workableTimesForOptionalAttendees.size() == 0) return workableTimesForMandatoryAttendees;
     
-    Collection<TimeRange> workableForBoth = new ArrayList<>();
+    ArrayList<TimeRange> workableForBoth = new ArrayList<>();
 
-    for (TimeRange workableForOptionalAttendees : workableTimesForOptionalAttendees) {
-      for (TimeRange workableForMandatoryAttendees : workableTimesForMandatoryAttendees) {
-        if (workableForOptionalAttendees.contains(workableForMandatoryAttendees) && !workableForBoth.contains(workableForMandatoryAttendees)) {
+    int mandatoryPointer = 0;
+    int optionalPointer = 0;
+
+    while (mandatoryPointer < workableTimesForMandatoryAttendees.size()
+        && optionalPointer < workableTimesForOptionalAttendees.size()) {
+      
+      TimeRange workableForMandatoryAttendees = workableTimesForMandatoryAttendees.get(mandatoryPointer);
+      TimeRange workableForOptionalAttendees = workableTimesForOptionalAttendees.get(optionalPointer);
+
+
+      if (workableForMandatoryAttendees.start() >= workableForOptionalAttendees.end()) {
+        optionalPointer++;
+      } else if (workableForOptionalAttendees.start() >= workableForMandatoryAttendees.end()) {
+        mandatoryPointer++;
+      } else if (workableForOptionalAttendees.contains(workableForMandatoryAttendees)) {
+        workableForBoth.add(workableForMandatoryAttendees);
+        mandatoryPointer++;
+      } else if (workableForMandatoryAttendees.contains(workableForOptionalAttendees)) {
+        workableForBoth.add(workableForOptionalAttendees);
+        optionalPointer++;
+      } else if (workableForOptionalAttendees.overlaps(workableForMandatoryAttendees)) {
+        
+        // If allowable time range overlaps then find if meeting can happend during that time.
+        int mandatoryWorkableTimeStart = workableForMandatoryAttendees.start();
+        int optionalWorkableTimeStart = workableForOptionalAttendees.start();
+        if (meetingDuration < Math.abs(mandatoryWorkableTimeStart - optionalWorkableTimeStart)) {
           workableForBoth.add(workableForMandatoryAttendees);
+          mandatoryPointer++;
+          optionalPointer++;
         }
       }
     }
 
+    // If time conflicts for optional attendees to attend, then provide time for mandatory attendee only.
     if (workableForBoth.isEmpty()) return workableTimesForMandatoryAttendees;
 
     return workableForBoth;
   }
 
-  private Collection<TimeRange> findOptimalTime(Collection<Event> events, MeetingRequest request, Boolean mandatory) {
+  private ArrayList<TimeRange> findOptimalTime(Collection<Event> events, MeetingRequest request, Boolean mandatory) {
     long meetingDuration = request.getDuration();
-    Collection<TimeRange> workable = new ArrayList<>();        
+    ArrayList<TimeRange> workable = new ArrayList<>();        
     List<TimeRange> conflictTimes = new ArrayList<>();
     for (Event event: events) {
       Set<String> attendeesForThisEvent = event.getAttendees();
