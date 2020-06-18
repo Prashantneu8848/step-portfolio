@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that checks if user is logging in. */
+/** Servlet that checks if user is logged in and sets nickname. */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
   
@@ -43,7 +43,9 @@ public class LoginServlet extends HttpServlet {
       Gson gson = new Gson();
       User user = userService.getCurrentUser();
       String logoutUrl = userService.createLogoutURL("/");
-      String nickname = getUserNickname(user.getUserId());
+      Entity userInfoEntity = getNickname(user.getUserId());
+
+      String nickname = userInfoEntity == null ? "" : (String) userInfoEntity.getProperty("nickname");
 
       UserInfo userInfo = new UserInfo(user, nickname, logoutUrl);
 
@@ -63,11 +65,16 @@ public class LoginServlet extends HttpServlet {
     String id = userService.getCurrentUser().getUserId();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity entity = new Entity("UserInfo");
-    entity.setProperty("id", id);
-    entity.setProperty("nickname", nickname);
-    
-    datastore.put(entity);
+
+    Entity userInfoEntity = getNickname(id);
+
+    if (userInfoEntity == null) {
+      userInfoEntity = new Entity("UserInfo");
+      userInfoEntity.setProperty("id", id);
+    }
+
+    userInfoEntity.setProperty("nickname", nickname);
+    datastore.put(userInfoEntity);
 
     response.sendRedirect("/index.html");
   }
@@ -81,18 +88,15 @@ public class LoginServlet extends HttpServlet {
   }
 
   /**
-   * Returns the nickname of the user with id, or empty String if the user has not set a nickname.
+   * Returns the nickname of the user with user id.
+   * Given id is not of UserInfo kind but a field of that kind.
    */
-  private String getUserNickname(String id) {
+  private Entity getNickname(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")
             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
     PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return "";
-    }
-    return (String) entity.getProperty("nickname");
+    return results.asSingleEntity();
   }
 }
