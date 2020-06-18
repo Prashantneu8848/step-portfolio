@@ -24,6 +24,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.Optional;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,7 @@ public class LoginServlet extends HttpServlet {
       Gson gson = new Gson();
       User user = userService.getCurrentUser();
       String logoutUrl = userService.createLogoutURL("/");
-      Entity userInfoEntity = getNickname(user.getUserId());
+      Entity userInfoEntity = getUserinfoEntity(user.getUserId());
 
       String nickname = userInfoEntity == null ? "" : (String) userInfoEntity.getProperty("nickname");
 
@@ -61,12 +62,12 @@ public class LoginServlet extends HttpServlet {
   
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String nickname = getParameter(request, "nickname", "");
+    String nickname = getParameter(request, "nickname").orElse("");
     String id = userService.getCurrentUser().getUserId();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    Entity userInfoEntity = getNickname(id);
+    Entity userInfoEntity = getUserinfoEntity(id);
 
     if (userInfoEntity == null) {
       userInfoEntity = new Entity("UserInfo");
@@ -79,19 +80,15 @@ public class LoginServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+  private Optional<String> getParameter(HttpServletRequest request, String name) {
+    return Optional.ofNullable(request.getParameter(name));
   }
 
   /**
-   * Returns the nickname of the user with user id.
+   * Returns the UserInfo entity with user id.
    * Given id is not of UserInfo kind but a field of that kind.
    */
-  private Entity getNickname(String id) {
+  private Entity getUserinfoEntity(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")
