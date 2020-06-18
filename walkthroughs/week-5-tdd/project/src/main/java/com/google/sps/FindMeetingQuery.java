@@ -49,12 +49,12 @@ public final class FindMeetingQuery {
     if (events.isEmpty()) return Arrays.asList(TimeRange.WHOLE_DAY);
 
 
-    ArrayList<TimeRange> workableTimesForMandatoryAttendees = findOptimalTimes(events, request, true);
+    ArrayList<TimeRange> workableTimesForMandatoryAttendees = findWorkableTimes(findConflictingTimes(events, request, true), meetingDuration);
 
     // If there are no optional attendees, then provide time for mandatory attendees.
     if (request.getOptionalAttendees().isEmpty()) return workableTimesForMandatoryAttendees;
 
-    ArrayList<TimeRange> workableTimesForOptionalAttendees = findOptimalTimes(events, request, false);
+    ArrayList<TimeRange> workableTimesForOptionalAttendees = findWorkableTimes(findConflictingTimes(events, request, false), meetingDuration);
 
     // If there are no mandatory attendees, then provide time for optional attendees.
     if (request.getAttendees().isEmpty()) return workableTimesForOptionalAttendees;
@@ -72,7 +72,6 @@ public final class FindMeetingQuery {
       
       TimeRange workableForMandatoryAttendees = workableTimesForMandatoryAttendees.get(mandatoryPointer);
       TimeRange workableForOptionalAttendees = workableTimesForOptionalAttendees.get(optionalPointer);
-
 
       if (workableForMandatoryAttendees.start() >= workableForOptionalAttendees.end()) {
         optionalPointer++;
@@ -104,17 +103,16 @@ public final class FindMeetingQuery {
   }
 
   /**
-   * Finds the optimal time between attendees events and meeting duration.
+   * Finds the conflicting time between attendees events and meeting duration.
    *
    * @param events  collection of events happening that day
    * @param request meeting that needs to be scheduled for the attendees
    * @param mandatory determines if the meeting request involves mandatory attendees.
    *
-   * @return collection of time when the meeting can be scheduled.
+   * @return collection of time when the meeting can not be scheduled.
    */
-  private ArrayList<TimeRange> findOptimalTimes(Collection<Event> events, MeetingRequest request, boolean mandatory) {
-    long meetingDuration = request.getDuration();
-    ArrayList<TimeRange> workableTimes = new ArrayList<>();        
+  private List<TimeRange> findConflictingTimes(Collection<Event> events, MeetingRequest request, boolean mandatory) {
+    
     List<TimeRange> conflictTimes = new ArrayList<>();
     for (Event event: events) {
       Set<String> attendeesForThisEvent = event.getAttendees();
@@ -128,6 +126,18 @@ public final class FindMeetingQuery {
         }
       }
     }
+    return conflictTimes;
+  }
+
+  /**
+   * Finds the workable time between attendees events and meeting duration.
+   *
+   * @param conflictTimes  collection of time range conflicting with the meeting
+   *
+   * @return collection of time when the meeting can be scheduled.
+   */
+  private ArrayList<TimeRange> findWorkableTimes(List<TimeRange> conflictTimes, long meetingDuration) {
+    ArrayList<TimeRange> workableTimes = new ArrayList<>();    
     Collections.sort(conflictTimes, TimeRange.ORDER_BY_START);
     int workableTimeStart = TimeRange.START_OF_DAY;
     int workableTimeEnd = 0;
