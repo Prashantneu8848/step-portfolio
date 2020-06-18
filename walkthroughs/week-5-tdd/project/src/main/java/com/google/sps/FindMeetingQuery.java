@@ -104,7 +104,7 @@ public final class FindMeetingQuery {
   }
 
   /**
-   * Finds the optimal time.
+   * Finds the optimal time between attendees events and meeting duration.
    *
    * @param events  collection of events happening that day
    * @param request meeting that needs to be scheduled for the attendees
