@@ -40,7 +40,7 @@ public final class FindMeetingQuery {
     long meetingDuration = request.getDuration();
 
     // No meeting can happen more than a day.
-    if (meetingDuration > 24*60) return Collections.emptyList();
+    if (meetingDuration > TimeRange.WHOLE_DAY.duration()) return Collections.emptyList();
 
     // If there are no attendees including optional, the meeting can happen anytime during the day.
     if (request.getAttendees().isEmpty() && request.getOptionalAttendees().isEmpty()) return Arrays.asList(TimeRange.WHOLE_DAY);
