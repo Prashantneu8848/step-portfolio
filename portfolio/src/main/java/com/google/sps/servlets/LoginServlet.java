@@ -25,6 +25,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.NoSuchElementException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +45,14 @@ public class LoginServlet extends HttpServlet {
       Gson gson = new Gson();
       User user = userService.getCurrentUser();
       String logoutUrl = userService.createLogoutURL("/");
-      Entity userInfoEntity = getUserinfoEntity(user.getUserId());
 
-      String nickname = userInfoEntity == null ? "" : (String) userInfoEntity.getProperty("nickname");
-
+      String nickname;
+      try {
+        Entity userInfoEntity = getUserInfoEntity(user.getUserId()).get();
+        nickname = (String) userInfoEntity.getProperty("nickname");
+      } catch (Exception NoSuchElementException) {
+        nickname = "";
+      }
       UserInfo userInfo = new UserInfo(user, nickname, logoutUrl);
 
       String json = gson.toJson(userInfo);
@@ -67,9 +72,11 @@ public class LoginServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    Entity userInfoEntity = getUserinfoEntity(id);
-
-    if (userInfoEntity == null) {
+    Entity userInfoEntity;
+    // Do not create another entity to set nickname if it already exists.
+    try {
+      userInfoEntity = getUserInfoEntity(id).get();
+    } catch (Exception NoSuchElementException) {
       userInfoEntity = new Entity("UserInfo");
       userInfoEntity.setProperty("id", id);
     }
@@ -88,12 +95,12 @@ public class LoginServlet extends HttpServlet {
    * Returns the UserInfo entity with user id.
    * Given id is not of UserInfo kind but a field of that kind.
    */
-  private Entity getUserinfoEntity(String id) {
+  private Optional<Entity> getUserInfoEntity(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")
             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
     PreparedQuery results = datastore.prepare(query);
-    return results.asSingleEntity();
+    return Optional.ofNullable(results.asSingleEntity());
   }
 }
